@@ -12,16 +12,16 @@ class EarthquakeViewCell: UITableViewCell {
     
     private lazy var earthquakeImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "target")
-        imageView.tintColor = .systemRed
-        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "sismoFondo")
+        //imageView.tintColor = .systemRed
         imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
-    private lazy var titleLabel: UILabel = {
+    lazy var titleLabel: UILabel = {
         let label = UILabel(frame: .zero)
-        label.font = UIFont(name: "Arial Rounded MT bold", size: 14)
+        label.font = UIFont(name: "Arial Rounded MT bold", size: 16)
         label.textAlignment = .center
         label.textColor = .black
         label.numberOfLines = 0
@@ -31,7 +31,7 @@ class EarthquakeViewCell: UITableViewCell {
         return label
     }()
     
-    private lazy var placeLabel: UILabel = {
+    lazy var placeLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.font = UIFont(name: "Arial Rounded MT", size: 10)
         label.textAlignment = .left
@@ -43,7 +43,7 @@ class EarthquakeViewCell: UITableViewCell {
         return label
     }()
     
-    private lazy var magnitudeLabel: UILabel = {
+    lazy var magnitudeLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.font = UIFont(name: "Arial Rounded MT", size: 10)
         label.textAlignment = .left
@@ -55,7 +55,7 @@ class EarthquakeViewCell: UITableViewCell {
         return label
     }()
     
-    private lazy var depthLabel: UILabel = {
+    lazy var depthLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.font = UIFont(name: "Arial Rounded MT", size: 10)
         label.textAlignment = .left
@@ -70,7 +70,7 @@ class EarthquakeViewCell: UITableViewCell {
     lazy var detailButton: UIButton = {
         let button = UIButton()
         var configuracion = UIButton.Configuration.borderedTinted()
-        configuracion.titleAlignment = .center
+        configuracion.titleAlignment = .leading
         configuracion.baseForegroundColor = .systemGray
         configuracion.baseBackgroundColor = .white
         
@@ -83,7 +83,21 @@ class EarthquakeViewCell: UITableViewCell {
                 
         return button
     }()
-    private var titleString: String? {
+    
+    private lazy var stackView: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .vertical
+        stack.distribution = .equalSpacing
+        //stack.addArrangedSubview(titleLabel)
+        stack.addArrangedSubview(placeLabel)
+        stack.addArrangedSubview(magnitudeLabel)
+        stack.addArrangedSubview(depthLabel)
+        stack.addArrangedSubview(detailButton)
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }()
+    
+    /*private var titleString: String? {
         didSet{
             titleLabel.text = "Terremoto: \(String(describing: titleString))"
         }
@@ -105,7 +119,7 @@ class EarthquakeViewCell: UITableViewCell {
         didSet{
             placeLabel.text = "Lugar: \(String(describing: placeString))"
         }
-    }
+    }*/
     
     var buttonAction: (() -> Void)?
     
@@ -119,12 +133,10 @@ class EarthquakeViewCell: UITableViewCell {
     }
     
     func setupConstraints() {
-        self.contentView.addSubview(earthquakeImageView)
+        
         self.contentView.addSubview(titleLabel)
-        self.contentView.addSubview(magnitudeLabel)
-        self.contentView.addSubview(depthLabel)
-        self.contentView.addSubview(placeLabel)
-        self.contentView.addSubview(detailButton)
+        self.contentView.addSubview(earthquakeImageView)
+        self.contentView.addSubview(stackView)
         
         NSLayoutConstraint.activate([
             .init(item: titleLabel, attribute: .top, relatedBy: .equal, toItem: self.contentView, attribute: .top, multiplier: 1.0, constant: 10.0),
@@ -133,40 +145,27 @@ class EarthquakeViewCell: UITableViewCell {
             
             .init(item: earthquakeImageView, attribute: .top, relatedBy: .equal, toItem: titleLabel, attribute: .bottom, multiplier: 1.0, constant: 8.0),
             .init(item: earthquakeImageView, attribute: .leading, relatedBy: .equal, toItem: self.contentView, attribute: .leading, multiplier: 1.0, constant: 8.0),
-            .init(item: earthquakeImageView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 60.0),
-            .init(item: earthquakeImageView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 60.0),
+            .init(item: earthquakeImageView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 80.0),
+            //.init(item: earthquakeImageView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 60.0),
+            .init(item: earthquakeImageView, attribute: .bottom, relatedBy: .equal, toItem: self.contentView, attribute: .bottom, multiplier: 1.0, constant: -8.0),
             
-            
-            
-            .init(item: magnitudeLabel, attribute: .top, relatedBy: .equal, toItem: titleLabel, attribute: .bottom, multiplier: 1.0, constant: 10.0),
-            .init(item: magnitudeLabel, attribute: .leading, relatedBy: .equal, toItem: earthquakeImageView, attribute: .trailing, multiplier: 1.0, constant: 8.0),
-            .init(item: magnitudeLabel, attribute: .trailing, relatedBy: .equal, toItem: self.contentView, attribute: .trailing, multiplier: 1.0, constant: -8.0),
-            
-            .init(item: depthLabel, attribute: .top, relatedBy: .equal, toItem: magnitudeLabel, attribute: .bottom, multiplier: 1.0, constant: 10.0),
-            .init(item: depthLabel, attribute: .leading, relatedBy: .equal, toItem: earthquakeImageView, attribute: .trailing, multiplier: 1.0, constant: 8.0),
-            .init(item: depthLabel, attribute: .trailing, relatedBy: .equal, toItem: self.contentView, attribute: .trailing, multiplier: 1.0, constant: -8.0),
-            
-            .init(item: placeLabel, attribute: .top, relatedBy: .equal, toItem: depthLabel, attribute: .bottom, multiplier: 1.0, constant: 10.0),
-            .init(item: placeLabel, attribute: .leading, relatedBy: .equal, toItem: self.contentView, attribute: .leading, multiplier: 1.0, constant: 8.0),
-            .init(item: placeLabel, attribute: .trailing, relatedBy: .equal, toItem: self.contentView, attribute: .trailing, multiplier: 1.0, constant: -8.0),
-            
-            .init(item: detailButton, attribute: .top, relatedBy: .equal, toItem: placeLabel, attribute: .bottom, multiplier: 1.0, constant: 16.0),
-            .init(item: detailButton, attribute: .leading, relatedBy: .equal, toItem: self.contentView, attribute: .leading, multiplier: 1.0, constant: 8.0),
-            .init(item: detailButton, attribute: .trailing, relatedBy: .equal, toItem: self.contentView, attribute: .trailing, multiplier: 1.0, constant: -8.0),
-            .init(item: detailButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 30.0),
-            .init(item: self.contentView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 200.0)
-            
+            .init(item: stackView, attribute: .top, relatedBy: .equal, toItem: titleLabel, attribute: .bottom, multiplier: 1.0, constant: 8.0),
+            .init(item: stackView, attribute: .leading, relatedBy: .equal, toItem: earthquakeImageView, attribute: .trailing, multiplier: 1.0, constant: 8.0),
+            .init(item: stackView, attribute: .trailing, relatedBy: .equal, toItem: self.contentView, attribute: .trailing, multiplier: 1.0, constant: -8.0),
+            .init(item: stackView, attribute: .bottom, relatedBy: .equal, toItem: self.contentView, attribute: .bottom, multiplier: 1.0, constant: -8.0),
+            .init(item: self.contentView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 180.0)
         ])
-    }
-    
-    public func configure(title: String, magnitude: Double, depth: Double, place: String) {
-        titleString = title
-        magnitudeString = "\(magnitude)"
-        depthString = "\(depth)"
-        placeString = place
+        
     }
     
     @objc func buttonTapped() {
         buttonAction?()
     }
 }
+
+/*public func configure(title: String, magnitude: Double, depth: Double, place: String) {
+    titleString = title
+    magnitudeString = "\(magnitude)"
+    depthString = "\(depth)"
+    placeString = place
+}*/

@@ -2,16 +2,15 @@
 //  EarthquakeTableViewDataSource.swift
 //  AppEarthquakesChallengeIOS
 //
-//  Created by Alejandra Vergara Meriño on 15-02-24.
+//  Created by Alejandra Vergara Meriño on 12-02-24.
 //
 import UIKit
 
-class EarthquakeTableViewDataSource: NSObject, UITableViewDataSource {
+/*class EarthquakeTableViewDataSource: NSObject, UITableViewDataSource {
     
-    private var data: [EarthquakeModelCell]
+    private var data: [EarthquakeModelCell] =  []
     
-    init(data: [EarthquakeModelCell]) {
-        self.data = data
+    override init() {
         super.init()
     }
     
@@ -19,10 +18,13 @@ class EarthquakeTableViewDataSource: NSObject, UITableViewDataSource {
         self.data = data
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return data.count
-    }
+    */
+/*extension EarthquakeTableView: UITableViewDataSource {
     
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 10
+    }
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "EarthquakeViewCell", for: indexPath)
         if let cellEarthquake = cell as? EarthquakeViewCell {
@@ -36,8 +38,9 @@ class EarthquakeTableViewDataSource: NSObject, UITableViewDataSource {
         return cell
     }
     
-    func getModel(indexPath: IndexPath) -> EarthquakeModelCell{
-        return data[indexPath.row]
-    }
+    /*func getModel(indexPath: IndexPath) -> EarthquakeModelCell{
+        return
+    }*/
     
 }
+*/

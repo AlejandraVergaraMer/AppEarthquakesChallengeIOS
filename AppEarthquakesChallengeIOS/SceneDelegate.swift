@@ -15,19 +15,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
-        /*let isLoggedIn = SessionManager.shared.isLoggedIn
-        let serviceHome = EarthquakeService(startTime: "2020-01-01", endTime: "2020-01-02")
-        let providerHome = EarthquakeHomeProvider(serviceApi: serviceHome)
-        let controller = isLoggedIn ? HomeTableViewController(provider: providerHome, isItFirstLogin: false) : LoginViewController()*/
-        //let controller = UIHostingController(rootView: LoginView())
-        let navigation = UINavigationController()
-        let coordinator = CoordinatorGeneral(navigationController: navigation)
-        coordinator.navigationController = navigation
-        navigation.delegate = coordinator
-        coordinator.start()
+        
+        let serviceHome = EarthquakeListService(startTime: "2020-01-01", endTime: "2020-01-02")//EarthquakeService(startTime: "2020-01-01", endTime: "2020-01-02")
+        let providerHome = EarthquakeListProvider(serviceApi: serviceHome)//EarthquakeHomeProvider(serviceApi: serviceHome)
+        let controller = EarthquakeListViewController(provider: providerHome)//isLoggedIn ? HomeTableViewController(provider: providerHome, isItFirstLogin: false) : LoginViewController()
+        let navigation = UINavigationController(rootViewController: controller)
         
         window?.rootViewController = navigation
-        //self.window = window
         window?.makeKeyAndVisible()
     }
 

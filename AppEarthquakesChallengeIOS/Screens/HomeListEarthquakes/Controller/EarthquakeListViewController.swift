@@ -8,50 +8,53 @@
 import Foundation
 import UIKit
 
+protocol EarthquakeViewControllerDelegate: AnyObject {
+    func didTapDetails(idCell: String)
+}
+
 class EarthquakeListViewController: UIViewController {
     
-    //private var dataSource: EarthquakeTableViewDataSource?
     private let provider: EarthquakeListProviderProtocol?
+    private var pagerIndex: Int = 0
+    private var listData: [EarthquakeModelCell] = []
     
-    /*private let datePicker: UIDatePicker = {
-        let picker = UIDatePicker()
-        picker.datePickerMode = .date
-        picker.addTarget(picker, action: #selector(datePickerValueChanged), for: .valueChanged)
+    private lazy var datePicker: EarthquakeDatePickerView = {
+        let picker = EarthquakeDatePickerView(delegate: self)
+        picker.translatesAutoresizingMaskIntoConstraints = false
         return picker
     }()
     
-    lazy var tableView: UITableView = {
+    private lazy var tableView: UITableView = {
         let table = UITableView(frame: .zero)
         table.delegate = self
+        table.dataSource = self
         table.register(EarthquakeViewCell.self, forCellReuseIdentifier: "EarthquakeViewCell")
         table.translatesAutoresizingMaskIntoConstraints = false
         return table
     }()
     
-    lazy var nextPageButton: UIButton = {
-        let button = UIButton()
-        var configuracion = UIButton.Configuration.borderedTinted()
-        configuracion.title = ">"
-        configuracion.titleAlignment = .center
-        configuracion.baseForegroundColor = .black
-        configuracion.baseBackgroundColor = .systemGray2
-                        
-        button.addTarget(self, action: #selector(nextPage), for: .touchUpInside)
-        button.configuration = configuracion
-        button.translatesAutoresizingMaskIntoConstraints = false
-                
-        return button
-    }()*/
+    private lazy var pagerView: EarthquakePagerView = {
+        let pager = EarthquakePagerView(delegate: self)
+        pager.previousPageButton.isHidden = true
+        pager.previousPageButton.isEnabled = false
+        pager.translatesAutoresizingMaskIntoConstraints = false
+        return pager
+    }()
+    
+    private lazy var gradientView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "Fondo")
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFill
+        return imageView
+    }()
     
     init(provider: EarthquakeListProviderProtocol) {
         self.provider = provider
         super.init(nibName: nil, bundle: nil)
-        //dataSource = EarthquakeTableViewDataSource(data: [])
-        //tableView.dataSource = self.dataSource
         
-        fetchData()
     }
-    
+     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -59,11 +62,14 @@ class EarthquakeListViewController: UIViewController {
     private func fetchData() {
         provider?.getEarthquake(completion: { [weak self] status, data in
             guard let self = self else { return }
+            guard let data = data else { return }
             switch status {
             case .success:
-                //self.dataSource?.fetchData(data: data ?? [])
-                //self.tableView.reloadData()
-                print("error fetch data")
+                self.listData = data
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+                print("Exitoso: \(self.listData)")
             case .failure:
                 print("error fetch data")
             }
@@ -79,6 +85,7 @@ class EarthquakeListViewController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         self.title = "Ultimos Terremotos"
+        
         if let navigationBar = navigationController?.navigationBar {
             let textAttributes: [NSAttributedString.Key: Any] = [
                 .foregroundColor: UIColor.black,
@@ -89,18 +96,18 @@ class EarthquakeListViewController: UIViewController {
         let closeButton = UIBarButtonItem(title: "Salir", style: .done, target: self, action: #selector(closeSession))
         closeButton.tintColor = UIColor.black
         self.navigationItem.rightBarButtonItem = closeButton
-        //tableView.register(cellView, forCellReuseIdentifier: "")
+        fetchData()
     }
     
     override func loadView() {
-        //self.view = tableView
+        super.loadView()
+        setupView()
     }
     
     func showAlert() {
         let alertController = UIAlertController(title: "Lo sentimos", message: "Hubo un error al cargar la información. Inténtalo de nuevo.", preferredStyle: .alert)
         let action = UIAlertAction(title: "Reintentar", style: .default) { _ in
             alertController.dismiss(animated: true)
-            //self.tableView.reloadData()
         }
         alertController.addAction(action)
         present(alertController, animated: true)
@@ -108,31 +115,112 @@ class EarthquakeListViewController: UIViewController {
     
     @objc
     private func closeSession(){
-        /*SessionManager.shared.logout()
-         if isItFirstLogin {
-         navigationController?.setNavigationBarHidden(true, animated: false)
-         navigationController?.popViewController(animated: true)
-         } else {
-         navigationController?.setNavigationBarHidden(true, animated: false)
-         let loginController = LoginViewController()
-         navigationController?.pushViewController(loginController, animated: true)
-         }*/
+        //CerrarSesion
     }
 }
 
+extension EarthquakeListViewController {
+    func setupView(){
+        view.addSubview(gradientView)
+        
+        view.addSubview(datePicker)
+        view.addSubview(tableView)
+        view.addSubview(pagerView)
+        
+        NSLayoutConstraint.activate([
+            
+            .init(item: gradientView, attribute: .top, relatedBy: .equal, toItem: view.safeAreaLayoutGuide, attribute: .top, multiplier: 1.0, constant: 0.0),
+            .init(item: gradientView, attribute: .leading, relatedBy: .equal, toItem: view, attribute: .leading, multiplier: 1.0, constant: 0.0),
+            .init(item: gradientView, attribute: .trailing, relatedBy: .equal, toItem: view, attribute: .trailing, multiplier: 1.0, constant: 0.0),
+            .init(item: gradientView, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: 0.0),
+            
+            .init(item: datePicker, attribute: .top, relatedBy: .equal, toItem: gradientView.safeAreaLayoutGuide, attribute: .top, multiplier: 1.0, constant: 0.0),
+            .init(item: datePicker, attribute: .leading, relatedBy: .equal, toItem: gradientView, attribute: .leading, multiplier: 1.0, constant: 0.0),
+            .init(item: datePicker, attribute: .trailing, relatedBy: .equal, toItem: gradientView, attribute: .trailing, multiplier: 1.0, constant: 0.0),
+            .init(item: datePicker, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 60.0),
+                
+            .init(item: tableView, attribute: .top, relatedBy: .equal, toItem: datePicker, attribute: .bottom, multiplier: 1.0, constant: 10.0),
+            //.init(item: tableView, attribute: .top, relatedBy: .equal, toItem: gradientView.safeAreaLayoutGuide, attribute: .top, multiplier: 1.0, constant: 0.0),
+            .init(item: tableView, attribute: .leading, relatedBy: .equal, toItem: gradientView, attribute: .leading, multiplier: 1.0, constant: 20.0),
+            .init(item: tableView, attribute: .trailing, relatedBy: .equal, toItem: gradientView, attribute: .trailing, multiplier: 1.0, constant: -20.0),
+            //.init(item: tableView, attribute: .bottom, relatedBy: .equal, toItem: gradientView, attribute: .bottom, multiplier: 1.0, constant: -30.0)
+            .init(item: pagerView, attribute: .top, relatedBy: .equal, toItem: tableView, attribute: .bottom, multiplier: 1.0, constant: 10.0),
+            .init(item: pagerView, attribute: .centerX, relatedBy: .equal, toItem: gradientView, attribute: .centerX, multiplier: 1.0, constant: 0.0),
+            .init(item: pagerView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 86.0),
+            .init(item: pagerView, attribute: .bottom, relatedBy: .equal, toItem: gradientView, attribute: .bottom, multiplier: 1.0, constant: -20.0)
+            
+        ])
+    }
+}
 
-/*extension EarthquakeListViewController: UITableViewDelegate {
+extension EarthquakeListViewController: DatePickerViewDelegate {
+    func datePickerValueChanged() {
+        //BUSCAR POR FECHA
+    }
+    
+    func didTapSearch() {
+        //BUSCAR POR FECHA
+    }
+}
+
+extension EarthquakeListViewController: EarthquakePagerViewDelegate {
+    
+    func didTapNextPage() {
+        //cargar siguiente pagina
+        
+        if pagerIndex == 0 {
+            pagerView.previousPageButton.isHidden = true
+            pagerView.previousPageButton.isEnabled = false
+        } else {
+            pagerIndex += 1
+            guard let newList = provider?.getNextIndices(index: pagerIndex) else { return }
+            listData = newList
+            tableView.reloadData()
+            pagerView.previousPageButton.isHidden = false
+            pagerView.previousPageButton.isEnabled = true
+        }
+    }
+    
+    func didTapPreciousPage() {
+        // cargar pagina anterior
+        if pagerIndex == listData.count {
+            pagerView.nextPageButton.isHidden = true
+            pagerView.nextPageButton.isEnabled = false
+        } else {
+            pagerIndex -= 1
+            guard let newList = provider?.getPreviousIndices(index: pagerIndex) else { return }
+            listData = newList
+            tableView.reloadData()
+            pagerView.nextPageButton.isHidden = false
+            pagerView.nextPageButton.isEnabled = true
+        }
+    }
+    
+    
+}
+
+extension EarthquakeListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         UITableView.automaticDimension
     }
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let selected = dataSource?.getModel(indexPath: indexPath) else { return }
-        let idCell = selected.id
-        //MARK: LLAMAR A CONTROLADOR DE DETAILS
-        /*let service = DetailEarthquakeService(idEarthquake: idCell)
-         let provider = DetailEarthquakeProvider(serviceApi: service)
-         let controller = DetailEarthquakeViewController(providerDetails: provider, viewModel: selected)*/
-        //let controller = UIHostingController(rootView: EarthquakeViewCell())
-        //navigationController?.pushViewController(controller, animated: true)
+}
+
+extension EarthquakeListViewController: UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return listData.count
     }
-}*/
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "EarthquakeViewCell", for: indexPath)
+        if let cell = cell as? EarthquakeViewCell {
+            let model = listData[indexPath.row]
+            cell.titleLabel.text = "Terremoto: \(model.title)"
+            cell.magnitudeLabel.text = "Magnitud: \(model.magnitude)"
+            cell.depthLabel.text = "Profundidad: \(model.depth)"
+            cell.placeLabel.text = "Lugar: \(model.place)"
+        }
+        return cell
+    }
+}
+

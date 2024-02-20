@@ -61,13 +61,12 @@ class CoordinatorGeneral: Coordinator {
     override func start() {
         loginView = LoginView(delegate: self)
         let registerView = RegisterView()
-        let detailView = DetailEarthquakeView()
+        //let detailView = DetailEarthquakeView(viewModel: <#EarthquakeModelForDetail#>)
         //let tableController = EarthquakeListViewController(provider: )
         let controller = UIHostingController(rootView: loginView)
         navigationController.isNavigationBarHidden = true
         navigationController.pushViewController(controller, animated: true)
     }
-    
 }
 
 extension CoordinatorGeneral: LoginViewDelegate {

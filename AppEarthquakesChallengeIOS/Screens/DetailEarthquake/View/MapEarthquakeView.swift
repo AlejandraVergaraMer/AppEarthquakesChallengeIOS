@@ -8,12 +8,12 @@ import MapKit
 import SwiftUI
 
 struct CoordinatesRegion {
-    let latitude = 9.9333
-    let longitude = -84.0833
+    let latitude: Double // = 9.9333
+    let longitude: Double // = -84.0833
 }
 
 struct Span {
-    let delta = 0.1
+    let delta = 0.05
 }
 
 struct MapEarthquakeView: View {
@@ -41,6 +41,6 @@ struct MapEarthquakeView: View {
 
 struct MapEarthquakeView_Previews: PreviewProvider {
     static var previews: some View {
-        MapEarthquakeView(coordinateRegion: .init(), span: .init())
+        MapEarthquakeView(coordinateRegion: .init(latitude: 9.9333, longitude: -84.0833), span: .init())
     }
 }

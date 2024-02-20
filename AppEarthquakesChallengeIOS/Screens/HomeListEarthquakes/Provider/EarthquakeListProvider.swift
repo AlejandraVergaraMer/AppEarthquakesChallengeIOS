@@ -9,9 +9,14 @@ import Foundation
 
 protocol EarthquakeListProviderProtocol {
     func getEarthquake(completion : @escaping(_ status: StatusCaseEnum, _ data: [EarthquakeModelCell]?) -> Void)
+    func getNextIndices(index: Int) -> [EarthquakeModelCell]
+    func getPreviousIndices(index: Int) -> [EarthquakeModelCell]
 }
 
 class EarthquakeListProvider: EarthquakeListProviderProtocol {
+    
+    var listOriginal: [EarthquakeModelCell] = []
+    
     private let serviceApi: EarthquakeListServiceProtocol?
 
     init(serviceApi: EarthquakeListServiceProtocol) {
@@ -20,8 +25,11 @@ class EarthquakeListProvider: EarthquakeListProviderProtocol {
     
     func getEarthquake(completion: @escaping (StatusCaseEnum, [EarthquakeModelCell]?) -> Void) {
         serviceApi?.getEarthquakeList(completion: { status, data, error in
-            let apiListEarthquake = data?.earthquakes
-            let earthquakeArray = apiListEarthquake?.map({ earthquake -> EarthquakeModelCell in
+            guard let listEarthquake = data?.earthquakes else {
+                completion(status, nil)
+                return
+            }
+            let earthquakeArray = listEarthquake.map({ earthquake -> EarthquakeModelCell in
                 let objet = EarthquakeModelCell(
                     title: earthquake.properties.title,
                     place: earthquake.properties.place,
@@ -30,23 +38,29 @@ class EarthquakeListProvider: EarthquakeListProviderProtocol {
                     id: earthquake.id)
                 return objet
             })
-            completion(status, earthquakeArray ?? nil)
+            self.listOriginal = earthquakeArray
+            let earthquakes = self.getNextIndices(index: 0)//earthquakeArray.prefix(10)
+            completion(status, earthquakes)
         })
     }
-
-    /*func getEarthquake(completion: @escaping(StatusCaseEnum, [EarthquakeModelCell]?) -> Void) {
-        serviceApi?.getEarthquakeList(completion: { status, data, error in
-            let apiListEarthquake = data?.earthquakes
-            let earthquakeArray = apiListEarthquake?.map({ earthquake -> EarthquakeModelCell in
-                let objet = EarthquakeModelCell(
-                    title: earthquake.properties.title,
-                    place: earthquake.properties.place,
-                    magnitude: earthquake.properties.mag,
-                    depth: earthquake.geometry.coordinates[2],
-                    id: earthquake.id)
-                return objet
-            })
-            completion(status, earthquakeArray ?? nil)
-        })
-    }*/
+    
+    func getNextIndices(index: Int) -> [EarthquakeModelCell] {
+        let starIndex = index * 10
+        let endIndex = starIndex + 9
+        print("StarIndex: \(starIndex), EndIndex: \(endIndex)")
+        let nextList = Array(listOriginal[starIndex...endIndex])
+        print(nextList)
+        //let nextIndices = Array(index + 1...index + 10)
+        return nextList
+    }
+    
+    func getPreviousIndices(index: Int) -> [EarthquakeModelCell] {
+        let starIndex = (index - 1) * 10
+        let endIndex = starIndex + 9
+        print("StarIndex: \(starIndex), EndIndex: \(endIndex)")
+        let previousList = Array(listOriginal[starIndex...endIndex])
+        print(previousList)
+        //let nextIndices = Array(index + 1...index + 10)
+        return previousList
+    }
 }

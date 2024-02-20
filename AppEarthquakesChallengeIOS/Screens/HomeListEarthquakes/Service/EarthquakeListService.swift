@@ -9,7 +9,6 @@ import Foundation
 
 protocol EarthquakeListServiceProtocol {
     func getEarthquakeList(completion : @escaping(_ status: StatusCaseEnum, _ data: EarthquakeResponseDataModel?, _ error: Error?) -> Void)
-    
 }
 
 class EarthquakeListService: EarthquakeListServiceProtocol {
@@ -23,17 +22,55 @@ class EarthquakeListService: EarthquakeListServiceProtocol {
     }
     
     func getEarthquakeList(completion: @escaping (StatusCaseEnum, EarthquakeResponseDataModel?, Error?) -> Void) {
-        guard let url = URL(string: "http://localhost:3001/earthquakes") else { return }
         
-        let task = URLSession.shared.dataTask(with: url) { data, response, error in
-            guard let data = data else { return }
-            let dataModel = try! JSONDecoder().decode(EarthquakeResponseDataModel.self, from: data)
-            print("dataModel \(dataModel)")
-            completion(.success, dataModel, nil)
+        let urlString = "http://localhost:3001/earthquakes"
+        if let url = URL(string: urlString) {
+            let session = URLSession(configuration: .default)
+            
+            let task = session.dataTask(with: url) { data, response, error in
+                if error != nil {
+                    print("Error al obtener los datos: \(String(describing: error?.localizedDescription))")
+                    completion(.failure, nil, error)
+                }
+                if let data = data {
+                    let decoder = JSONDecoder()
+                    do {
+                        let dataDecoder = try decoder.decode(EarthquakeResponseDataModel.self, from: data)
+                        completion(.success, dataDecoder, nil)
+                    } catch {
+                        print("error al decodificar: \(error.localizedDescription)")
+                        completion(.failure, nil, error)
+                    }
+                    
+                }
+            }
+            task.resume()
         }
-        task.resume()
     }
 }
+
+/*guard let url = URL(string: "http://localhost:3001/earthquakes") else { return }
+
+let task = URLSession.shared.dataTask(with: url) { data, response, error in
+    guard let data = data else { return }
+    let dataModel = try! JSONDecoder().decode(EarthquakeResponseDataModel.self, from: data)
+    //print("dataModel \(dataModel)")
+    completion(.success, dataModel, nil)
+}
+task.resume()
+ 
+ /*let dataModel = try! JSONDecoder().decode(EarthquakeResponseDataModel.self, from: data)*/
+ 
+ if let data = try? Data(contentsOf: url) {
+     let decoder = JSONDecoder()
+     if let dataDecoder = try?  decoder.decode(EarthquakeResponseDataModel.self, from: data) {
+         completion(.success, dataDecoder, nil)
+     } else {
+         completion(.failure, nil, nil)
+     }
+ }
+ 
+ */
 
 /*
 
