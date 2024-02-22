@@ -11,6 +11,7 @@ protocol EarthquakeListProviderProtocol {
     func getEarthquake(completion : @escaping(_ status: StatusCaseEnum, _ data: [EarthquakeModelCell]?) -> Void)
     func getNextIndices(index: Int) -> [EarthquakeModelCell]
     func getPreviousIndices(index: Int) -> [EarthquakeModelCell]
+    func getFullListCount() -> Int
 }
 
 class EarthquakeListProvider: EarthquakeListProviderProtocol {
@@ -39,7 +40,7 @@ class EarthquakeListProvider: EarthquakeListProviderProtocol {
                 return objet
             })
             self.listOriginal = earthquakeArray
-            let earthquakes = self.getNextIndices(index: 0)//earthquakeArray.prefix(10)
+            let earthquakes = self.getNextIndices(index: 0)
             completion(status, earthquakes)
         })
     }
@@ -52,6 +53,10 @@ class EarthquakeListProvider: EarthquakeListProviderProtocol {
         print(nextList)
         //let nextIndices = Array(index + 1...index + 10)
         return nextList
+    }
+    
+    func getFullListCount() -> Int {
+        return listOriginal.count
     }
     
     func getPreviousIndices(index: Int) -> [EarthquakeModelCell] {

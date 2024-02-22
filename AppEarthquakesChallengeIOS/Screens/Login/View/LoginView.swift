@@ -83,6 +83,7 @@ struct LoginView: View {
                         let saveEmail = UserDefaults.standard.string(forKey: "email")
                         let savePassword = UserDefaults.standard.string(forKey: "password")
                         if userEmail == saveEmail && userPassword == savePassword {
+                            UserDefaults.standard.set(true, forKey: "isLoggedIn")
                             delegate?.didTapLogin()
                         } else {
                             showFailureAlert = true

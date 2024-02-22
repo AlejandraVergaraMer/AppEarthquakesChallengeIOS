@@ -38,7 +38,6 @@ class EarthquakePagerView: UIView {
         configuracion.titleAlignment = .center
         configuracion.baseForegroundColor = .black
         configuracion.baseBackgroundColor = .white.withAlphaComponent(0.8)
-                        
         button.addTarget(self, action: #selector(previousPage), for: .touchUpInside)
         button.configuration = configuracion
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -87,7 +86,7 @@ extension EarthquakePagerView {
             .init(item: nextPageButton, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 0.0),
             .init(item: nextPageButton, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 0.0),
             .init(item: nextPageButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 30.0),
-            .init(item: nextPageButton, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 40.0),
+            .init(item: nextPageButton, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 40.0)
         ])
     }
 }

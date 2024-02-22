@@ -10,20 +10,22 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-
+    var mainCoordinator: CoordinatorGeneral?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
         
-        let serviceHome = EarthquakeListService(startTime: "2020-01-01", endTime: "2020-01-02")//EarthquakeService(startTime: "2020-01-01", endTime: "2020-01-02")
-        let providerHome = EarthquakeListProvider(serviceApi: serviceHome)//EarthquakeHomeProvider(serviceApi: serviceHome)
-        let controller = EarthquakeListViewController(provider: providerHome)//isLoggedIn ? HomeTableViewController(provider: providerHome, isItFirstLogin: false) : LoginViewController()
-        let navigation = UINavigationController(rootViewController: controller)
-        
-        window?.rootViewController = navigation
+        let navigationController = UINavigationController()
+        mainCoordinator = CoordinatorGeneral(navigationController: navigationController)
+        mainCoordinator?.start()
+        window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
     }
+    /*let serviceHome = EarthquakeListService(startTime: "2020-01-01", endTime: "2020-01-02")//EarthquakeService(startTime: "2020-01-01", endTime: "2020-01-02")
+    let providerHome = EarthquakeListProvider(serviceApi: serviceHome)//EarthquakeHomeProvider(serviceApi: serviceHome)
+    let controller = EarthquakeListViewController(provider: providerHome)//isLoggedIn ? HomeTableViewController(provider: providerHome, isItFirstLogin: false) : LoginViewController()
+    let navigation = UINavigationController(rootViewController: controller)*/
 
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.

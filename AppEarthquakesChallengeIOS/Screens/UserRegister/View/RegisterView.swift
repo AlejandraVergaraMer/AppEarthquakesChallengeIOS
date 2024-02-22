@@ -7,8 +7,9 @@
 
 import SwiftUI
 
+
 struct RegisterView: View {
-    var viewModel = RegisterViewModel()
+    @ObservedObject var viewModel: RegisterViewModel
     @State private var userFirtsName = ""
     @State private var userLastName = ""
     @State private var userEmail = ""
@@ -20,8 +21,6 @@ struct RegisterView: View {
     @State private var showPasswordValidation = false
     @State private var showRepeatPasswordValidation = false
     @State private var isRegisterButtonEnable = false
-    @State private var showSuccesAlert = false
-    @State private var showFailureAlert = false
     
     var body: some View {
         ZStack {
@@ -30,7 +29,7 @@ struct RegisterView: View {
             VStack {
                 VStack(alignment: .leading) {
                     Text(viewModel.firtsNameType.titleTextField)
-                        .font(.title2)
+                        .font(.system(size: 18))
                         .fontWeight(.bold)
                         .foregroundColor(.secondary)
                     TextField(viewModel.firtsNameType.placeholderTextField, text: $userFirtsName)
@@ -39,8 +38,10 @@ struct RegisterView: View {
                         .cornerRadius(5)
                         .shadow(radius: 5)
                         .onChange(of: userFirtsName) { newValue in
-                            showFirtsNameValidation = viewModel.isValidTextField(newValue, type: viewModel.firtsNameType)//!newValue.isEmpty
-                            isRegisterButtonEnable = !userFirtsName.isEmpty && !userLastName.isEmpty && !userEmail.isEmpty && !userPassword.isEmpty && !userRepeatPassword.isEmpty
+                            showFirtsNameValidation = !newValue.isEmpty
+                            showFirtsNameValidation = viewModel.isValidTextField(newValue, type: viewModel.firtsNameType)
+                            
+                            isRegisterButtonEnable = !showFirtsNameValidation && !userLastName.isEmpty && !userEmail.isEmpty && !userPassword.isEmpty && !userRepeatPassword.isEmpty
                         }
                     if showFirtsNameValidation {
                         Text(viewModel.firtsNameType.validationText)
@@ -48,10 +49,10 @@ struct RegisterView: View {
                             .foregroundColor(.red)
                     }
                 }
-                .padding(.bottom, 20)
+                .padding(.bottom, 10)
                 VStack(alignment: .leading) {
                     Text(viewModel.lastNameType.titleTextField)
-                        .font(.title2)
+                        .font(.system(size: 18))
                         .fontWeight(.bold)
                         .foregroundColor(.secondary)
                     TextField(viewModel.lastNameType.placeholderTextField, text: $userLastName)
@@ -60,8 +61,9 @@ struct RegisterView: View {
                         .cornerRadius(5)
                         .shadow(radius: 5)
                         .onChange(of: userLastName) { newValue in
-                            showLastNameValidation = viewModel.isValidTextField(newValue, type: viewModel.lastNameType)//!newValue.isEmpty
-                            isRegisterButtonEnable = !userFirtsName.isEmpty && !userLastName.isEmpty && !userEmail.isEmpty && !userPassword.isEmpty && !userRepeatPassword.isEmpty
+                            showLastNameValidation = !newValue.isEmpty
+                            showLastNameValidation = viewModel.isValidTextField(newValue, type: viewModel.lastNameType)
+                            isRegisterButtonEnable = !userFirtsName.isEmpty && !showLastNameValidation && !userEmail.isEmpty && !userPassword.isEmpty && !userRepeatPassword.isEmpty
                         }
                     if showLastNameValidation {
                         Text(viewModel.lastNameType.validationText)
@@ -69,10 +71,10 @@ struct RegisterView: View {
                             .foregroundColor(.red)
                     }
                 }
-                .padding(.bottom, 20)
+                .padding(.bottom, 10)
                 VStack(alignment: .leading) {
                     Text(viewModel.emailType.titleTextField)
-                        .font(.title2)
+                        .font(.system(size: 18))
                         .fontWeight(.bold)
                         .foregroundColor(.secondary)
                     TextField(viewModel.emailType.placeholderTextField, text: $userEmail)
@@ -81,8 +83,9 @@ struct RegisterView: View {
                         .cornerRadius(5)
                         .shadow(radius: 5)
                         .onChange(of: userEmail) { newValue in
-                            showEmailValidation = viewModel.isValidTextField(newValue, type: viewModel.emailType)//!newValue.isEmpty
-                            isRegisterButtonEnable = !userFirtsName.isEmpty && !userLastName.isEmpty && !userEmail.isEmpty && !userPassword.isEmpty && !userRepeatPassword.isEmpty
+                            showEmailValidation = !newValue.isEmpty
+                            showEmailValidation = viewModel.isValidTextField(newValue, type: viewModel.emailType)
+                            isRegisterButtonEnable = !userFirtsName.isEmpty && !userLastName.isEmpty && !showEmailValidation && !userPassword.isEmpty && !userRepeatPassword.isEmpty
                         }
                     if showEmailValidation {
                         Text(viewModel.emailType.validationText)
@@ -90,10 +93,10 @@ struct RegisterView: View {
                             .foregroundColor(.red)
                     }
                 }
-                .padding(.bottom, 20)
+                .padding(.bottom, 10)
                 VStack(alignment: .leading) {
                     Text(viewModel.passwordType.titleTextField)
-                        .font(.title2)
+                        .font(.system(size: 18))
                         .fontWeight(.bold)
                         .foregroundColor(.secondary)
                     SecureField(viewModel.passwordType.placeholderTextField, text: $userPassword)
@@ -102,8 +105,9 @@ struct RegisterView: View {
                         .cornerRadius(5)
                         .shadow(radius: 5)
                         .onChange(of: userPassword) { newValue in
-                            showPasswordValidation = viewModel.isValidTextField(newValue, type: viewModel.passwordType)//!newValue.isEmpty
-                            isRegisterButtonEnable = !userFirtsName.isEmpty && !userLastName.isEmpty && !userEmail.isEmpty && !userPassword.isEmpty && !userRepeatPassword.isEmpty
+                            showPasswordValidation = !newValue.isEmpty
+                            showPasswordValidation = viewModel.isValidTextField(newValue, type: viewModel.passwordType)
+                            isRegisterButtonEnable = !userFirtsName.isEmpty && !userLastName.isEmpty && !userEmail.isEmpty && !showPasswordValidation && !userRepeatPassword.isEmpty
                         }
                     if showPasswordValidation {
                         Text(viewModel.passwordType.validationText)
@@ -111,10 +115,10 @@ struct RegisterView: View {
                             .foregroundColor(.red)
                     }
                 }
-                .padding(.bottom, 20)
+                .padding(.bottom, 10)
                 VStack(alignment: .leading) {
                     Text(viewModel.repeatPassword.titleTextField)
-                        .font(.title2)
+                        .font(.system(size: 18))
                         .fontWeight(.bold)
                         .foregroundColor(.secondary)
                     SecureField(viewModel.repeatPassword.placeholderTextField, text: $userRepeatPassword)
@@ -123,8 +127,9 @@ struct RegisterView: View {
                         .cornerRadius(5)
                         .shadow(radius: 5)
                         .onChange(of: userRepeatPassword) { newValue in
-                            showRepeatPasswordValidation = userPassword == userRepeatPassword//!newValue.isEmpty
-                            isRegisterButtonEnable = !userFirtsName.isEmpty && !userLastName.isEmpty && !userEmail.isEmpty && !userPassword.isEmpty && !userRepeatPassword.isEmpty
+                            showRepeatPasswordValidation = !newValue.isEmpty
+                            showRepeatPasswordValidation = userPassword != newValue
+                            isRegisterButtonEnable = !userFirtsName.isEmpty && !userLastName.isEmpty && !userEmail.isEmpty && !userPassword.isEmpty && !showRepeatPasswordValidation
                         }
                     if showRepeatPasswordValidation {
                         Text(viewModel.repeatPassword.validationText)
@@ -136,14 +141,15 @@ struct RegisterView: View {
                 
                 Button("Registrarse") {
                     if !showFirtsNameValidation && !showLastNameValidation && !showEmailValidation && !showPasswordValidation && !showRepeatPasswordValidation {
+                        debugPrint("\(!showFirtsNameValidation) && \(!showLastNameValidation) && \(!showEmailValidation) && \(!showPasswordValidation) && \(!showRepeatPasswordValidation)")
                         viewModel.saveUserData(firtsName: userFirtsName,lastName: userLastName,
                                                email: userEmail, password: userPassword)
-                        showSuccesAlert = true
+                        viewModel.successAlert()
                     } else {
-                        showFailureAlert = true
+                        viewModel.failureAlert()
                     }
                 }
-                    .disabled(isRegisterButtonEnable)
+                    .disabled(!isRegisterButtonEnable)
                     .font(.title3)
                     .fontWeight(.bold)
                     .foregroundColor(isRegisterButtonEnable ? .secondary : .secondary.opacity(0.5))
@@ -153,12 +159,6 @@ struct RegisterView: View {
                     .border(isRegisterButtonEnable ? Color.secondary : Color.white, width:  2)
                     .cornerRadius(5)
                 Spacer()
-            }
-            .alert(isPresented: $showSuccesAlert) {
-                Alert(title: Text("Tu registro fue exitoso"), message: Text("Puedes volver a la pantalla anterior para iniciar sesión"), dismissButton: .default(Text("Cerrar")))
-            }
-            .alert(isPresented: $showFailureAlert) {
-                Alert(title: Text("¡Ops! No pudimos registrarte"), message: Text("Revisa que todos los campos esten completados con la información correcta"), dismissButton: .default(Text("Cerrar")))
             }
             .padding()
         }
@@ -192,7 +192,11 @@ EarthquakesTextField(typeTextField: .repeatPassword)
 
 struct RegisterView_Previews: PreviewProvider {
     static var previews: some View {
-        RegisterView()
+        RegisterView(viewModel: .init(successAlert: {
+            print("Succes alert")
+        }, failureAlert: {
+            print("Failure alert")
+        }))
     }
 }
 

@@ -13,7 +13,6 @@ class EarthquakeViewCell: UITableViewCell {
     private lazy var earthquakeImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "sismoFondo")
-        //imageView.tintColor = .systemRed
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -88,7 +87,6 @@ class EarthquakeViewCell: UITableViewCell {
         let stack = UIStackView()
         stack.axis = .vertical
         stack.distribution = .equalSpacing
-        //stack.addArrangedSubview(titleLabel)
         stack.addArrangedSubview(placeLabel)
         stack.addArrangedSubview(magnitudeLabel)
         stack.addArrangedSubview(depthLabel)
@@ -96,30 +94,6 @@ class EarthquakeViewCell: UITableViewCell {
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()
-    
-    /*private var titleString: String? {
-        didSet{
-            titleLabel.text = "Terremoto: \(String(describing: titleString))"
-        }
-    }
-        
-    private var magnitudeString: String? {
-        didSet{
-            magnitudeLabel.text = "Magnitud: \(String(describing: magnitudeString))"
-        }
-    }
-    
-    private var depthString: String? {
-        didSet{
-            depthLabel.text = "Profundidad: \(String(describing: depthString))"
-        }
-    }
-        
-    private var placeString: String? {
-        didSet{
-            placeLabel.text = "Lugar: \(String(describing: placeString))"
-        }
-    }*/
     
     var buttonAction: (() -> Void)?
     
@@ -146,7 +120,6 @@ class EarthquakeViewCell: UITableViewCell {
             .init(item: earthquakeImageView, attribute: .top, relatedBy: .equal, toItem: titleLabel, attribute: .bottom, multiplier: 1.0, constant: 8.0),
             .init(item: earthquakeImageView, attribute: .leading, relatedBy: .equal, toItem: self.contentView, attribute: .leading, multiplier: 1.0, constant: 8.0),
             .init(item: earthquakeImageView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 80.0),
-            //.init(item: earthquakeImageView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 60.0),
             .init(item: earthquakeImageView, attribute: .bottom, relatedBy: .equal, toItem: self.contentView, attribute: .bottom, multiplier: 1.0, constant: -8.0),
             
             .init(item: stackView, attribute: .top, relatedBy: .equal, toItem: titleLabel, attribute: .bottom, multiplier: 1.0, constant: 8.0),
@@ -162,10 +135,3 @@ class EarthquakeViewCell: UITableViewCell {
         buttonAction?()
     }
 }
-
-/*public func configure(title: String, magnitude: Double, depth: Double, place: String) {
-    titleString = title
-    magnitudeString = "\(magnitude)"
-    depthString = "\(depth)"
-    placeString = place
-}*/

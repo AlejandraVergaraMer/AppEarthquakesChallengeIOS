@@ -7,19 +7,19 @@
 
 import Foundation
 
-class RegisterViewModel {
+class RegisterViewModel: ObservableObject {
     var firtsNameType: TypeTextField = .firtsName
     var lastNameType: TypeTextField = .lastName
     var emailType: TypeTextField = .email
     var passwordType: TypeTextField = .password
     var repeatPassword: TypeTextField = .repeatPassword
-    /*@Published var isLoggedIn: Bool {
-        didSet {
-            UserDefaults.standard.set(isLoggedIn, forKey: "isLoggedIn")
-        }
-    }*/
-
-    init() {
+    
+    let successAlert: () -> Void
+    let failureAlert: () -> Void
+    
+    init(successAlert: @escaping () -> Void, failureAlert: @escaping () -> Void) {
+        self.successAlert = successAlert
+        self.failureAlert = failureAlert
     }
     
     func saveUserData(firtsName: String, lastName: String, email: String, password: String) {
@@ -43,12 +43,17 @@ class RegisterViewModel {
         }
         let predicate = NSPredicate(format: "SELF MATCHES %@", regularExpression)
         if predicate.evaluate(with: value) {
-            return true
-        } else {
             return false
+        } else {
+            return true
         }
     }
-    /*init() {
-        //self.isLoggedIn = UserDefaults.standard.bool(forKey: "isLoggedIn")
-    }*/
+    
+    func showSuccesAlert() {
+        showSuccesAlert()
+    }
+    
+    func showFailureAlert() {
+        showFailureAlert()
+    }
 }

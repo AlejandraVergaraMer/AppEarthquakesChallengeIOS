@@ -10,6 +10,7 @@ import UIKit
 
 protocol EarthquakeViewControllerDelegate: AnyObject {
     func didTapDetails(idCell: String)
+    func closeSession()
 }
 
 class EarthquakeListViewController: UIViewController {
@@ -17,6 +18,8 @@ class EarthquakeListViewController: UIViewController {
     private let provider: EarthquakeListProviderProtocol?
     private var pagerIndex: Int = 0
     private var listData: [EarthquakeModelCell] = []
+    weak var delegate: EarthquakeViewControllerDelegate?
+    
     
     private lazy var datePicker: EarthquakeDatePickerView = {
         let picker = EarthquakeDatePickerView(delegate: self)
@@ -35,8 +38,7 @@ class EarthquakeListViewController: UIViewController {
     
     private lazy var pagerView: EarthquakePagerView = {
         let pager = EarthquakePagerView(delegate: self)
-        pager.previousPageButton.isHidden = true
-        pager.previousPageButton.isEnabled = false
+        //pager.delegate = self
         pager.translatesAutoresizingMaskIntoConstraints = false
         return pager
     }()
@@ -49,8 +51,9 @@ class EarthquakeListViewController: UIViewController {
         return imageView
     }()
     
-    init(provider: EarthquakeListProviderProtocol) {
+    init(provider: EarthquakeListProviderProtocol, delegate: EarthquakeViewControllerDelegate) {
         self.provider = provider
+        self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
         
     }
@@ -66,6 +69,8 @@ class EarthquakeListViewController: UIViewController {
             switch status {
             case .success:
                 self.listData = data
+                //self.pagerView.previousPageButton.isHidden = true
+                //self.pagerView.previousPageButton.isEnabled = false
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
                 }
@@ -96,6 +101,7 @@ class EarthquakeListViewController: UIViewController {
         let closeButton = UIBarButtonItem(title: "Salir", style: .done, target: self, action: #selector(closeSession))
         closeButton.tintColor = UIColor.black
         self.navigationItem.rightBarButtonItem = closeButton
+        validationFirstIndex()
         fetchData()
     }
     
@@ -116,6 +122,7 @@ class EarthquakeListViewController: UIViewController {
     @objc
     private func closeSession(){
         //CerrarSesion
+        delegate?.closeSession()
     }
 }
 
@@ -140,10 +147,9 @@ extension EarthquakeListViewController {
             .init(item: datePicker, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 60.0),
                 
             .init(item: tableView, attribute: .top, relatedBy: .equal, toItem: datePicker, attribute: .bottom, multiplier: 1.0, constant: 10.0),
-            //.init(item: tableView, attribute: .top, relatedBy: .equal, toItem: gradientView.safeAreaLayoutGuide, attribute: .top, multiplier: 1.0, constant: 0.0),
             .init(item: tableView, attribute: .leading, relatedBy: .equal, toItem: gradientView, attribute: .leading, multiplier: 1.0, constant: 20.0),
             .init(item: tableView, attribute: .trailing, relatedBy: .equal, toItem: gradientView, attribute: .trailing, multiplier: 1.0, constant: -20.0),
-            //.init(item: tableView, attribute: .bottom, relatedBy: .equal, toItem: gradientView, attribute: .bottom, multiplier: 1.0, constant: -30.0)
+            
             .init(item: pagerView, attribute: .top, relatedBy: .equal, toItem: tableView, attribute: .bottom, multiplier: 1.0, constant: 10.0),
             .init(item: pagerView, attribute: .centerX, relatedBy: .equal, toItem: gradientView, attribute: .centerX, multiplier: 1.0, constant: 0.0),
             .init(item: pagerView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 86.0),
@@ -165,44 +171,59 @@ extension EarthquakeListViewController: DatePickerViewDelegate {
 
 extension EarthquakeListViewController: EarthquakePagerViewDelegate {
     
-    func didTapNextPage() {
-        //cargar siguiente pagina
-        
+    func validationFirstIndex() {
         if pagerIndex == 0 {
             pagerView.previousPageButton.isHidden = true
             pagerView.previousPageButton.isEnabled = false
         } else {
-            pagerIndex += 1
-            guard let newList = provider?.getNextIndices(index: pagerIndex) else { return }
-            listData = newList
-            tableView.reloadData()
             pagerView.previousPageButton.isHidden = false
             pagerView.previousPageButton.isEnabled = true
         }
     }
     
-    func didTapPreciousPage() {
-        // cargar pagina anterior
-        if pagerIndex == listData.count {
+    func validationLastIndex() {
+        guard let lastIndex = provider?.getFullListCount() else { return }
+        if pagerIndex == lastIndex {
             pagerView.nextPageButton.isHidden = true
             pagerView.nextPageButton.isEnabled = false
         } else {
-            pagerIndex -= 1
-            guard let newList = provider?.getPreviousIndices(index: pagerIndex) else { return }
-            listData = newList
-            tableView.reloadData()
             pagerView.nextPageButton.isHidden = false
             pagerView.nextPageButton.isEnabled = true
         }
     }
     
+    func didTapNextPage() {
+        //cargar siguiente pagina
+        validationFirstIndex()
+        pagerIndex += 1
+        guard let newList = provider?.getNextIndices(index: pagerIndex) else { return }
+        print("\(listData.description)")
+        listData = newList
+        tableView.reloadData()
+        validationFirstIndex()
+    }
     
+    func didTapPreciousPage() {
+        validationLastIndex()
+        pagerIndex -= 1
+        guard let newList = provider?.getPreviousIndices(index: pagerIndex) else { return }
+        listData = newList
+        tableView.reloadData()
+        validationLastIndex()
+    }
 }
 
 extension EarthquakeListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         UITableView.automaticDimension
     }
+    
+    /*func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let selected = listData[indexPath.row]
+        let idCell = selected.id
+        //MARK: LLAMAR A CONTROLADOR DE DETAILS
+        delegate?.didTapDetails(idCell: idCell)
+    }*/
 }
 
 extension EarthquakeListViewController: UITableViewDataSource {
@@ -219,6 +240,9 @@ extension EarthquakeListViewController: UITableViewDataSource {
             cell.magnitudeLabel.text = "Magnitud: \(model.magnitude)"
             cell.depthLabel.text = "Profundidad: \(model.depth)"
             cell.placeLabel.text = "Lugar: \(model.place)"
+            cell.buttonAction = {
+                self.delegate?.didTapDetails(idCell: model.id)
+            }
         }
         return cell
     }
