@@ -30,7 +30,7 @@ class CoordinatorGeneral: Coordinator {
     }
     
     func start() {
-        //UserDefaults.standard.set(false, forKey: "isLoggedIn")
+        UserDefaults.standard.set(false, forKey: "isLoggedIn")
         if !isLoggedIn {
             let loginView = LoginView(delegate: self)
             let controller = UIHostingController(rootView: loginView)

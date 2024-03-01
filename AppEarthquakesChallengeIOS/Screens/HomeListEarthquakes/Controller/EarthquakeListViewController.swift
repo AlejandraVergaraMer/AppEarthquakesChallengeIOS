@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import Combine
 
 protocol EarthquakeViewControllerDelegate: AnyObject {
     func didTapDetails(idCell: String)
@@ -19,6 +20,7 @@ class EarthquakeListViewController: UIViewController {
     private var pagerIndex: Int = 0
     private var listData: [EarthquakeModelCell] = []
     weak var delegate: EarthquakeViewControllerDelegate?
+    private var cancellables = Set<AnyCancellable>()
     
     
     private lazy var datePicker: EarthquakeDatePickerView = {
@@ -34,13 +36,6 @@ class EarthquakeListViewController: UIViewController {
         table.register(EarthquakeViewCell.self, forCellReuseIdentifier: "EarthquakeViewCell")
         table.translatesAutoresizingMaskIntoConstraints = false
         return table
-    }()
-    
-    private lazy var pagerView: EarthquakePagerView = {
-        let pager = EarthquakePagerView(delegate: self)
-        //pager.delegate = self
-        pager.translatesAutoresizingMaskIntoConstraints = false
-        return pager
     }()
     
     private lazy var gradientView: UIImageView = {
@@ -60,25 +55,6 @@ class EarthquakeListViewController: UIViewController {
      
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    private func fetchData() {
-        provider?.getEarthquake(completion: { [weak self] status, data in
-            guard let self = self else { return }
-            guard let data = data else { return }
-            switch status {
-            case .success:
-                self.listData = data
-                //self.pagerView.previousPageButton.isHidden = true
-                //self.pagerView.previousPageButton.isEnabled = false
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
-                print("Exitoso: \(self.listData)")
-            case .failure:
-                print("error fetch data")
-            }
-        })
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -101,14 +77,86 @@ class EarthquakeListViewController: UIViewController {
         let closeButton = UIBarButtonItem(title: "Salir", style: .done, target: self, action: #selector(closeSession))
         closeButton.tintColor = UIColor.black
         self.navigationItem.rightBarButtonItem = closeButton
-        validationFirstIndex()
-        fetchData()
+        //await fetchData()
+        Task {
+            await fetchData()
+        }
     }
     
     override func loadView() {
         super.loadView()
         setupView()
     }
+    
+    private func fetchData() async {
+        provider?.getEarthquakeCombine(startTime: "2020-01-01", endTime: "2020-01-02")
+                .sink(receiveCompletion: { completion in
+                    switch completion {
+                    case .finished:
+                        break
+                    case .failure(let error):
+                        self.showAlert()
+                        print("Error fetching earthquake data: \(error)")
+                    }
+                }, receiveValue: { (status, earthquakes) in
+                    // Aquí puedes actualizar tu tabla con los datos de los terremotos
+                    // earthquakeArray contiene los modelos de terremotos
+                    guard let earthquakes = earthquakes else { return }
+                    self.listData = earthquakes
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
+                    }
+                })
+                .store(in: &cancellables)
+        /*do {
+            //guard let provider = provider else { return }
+            let (status, data) = try await provider?.getEarthquakeCombine(startTime: "2020-01-01", endTime: "2020-01-02")
+            guard status == .success, let data = data else {
+                self.showAlert()
+                return
+            }
+            self.listData = data
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        } catch {
+            self.showAlert()
+        }*/
+        /*do {
+            guard let data = try await provider?.getEarthquakeCombine() else { return }
+            self.listData = data
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        } catch {
+            self.showAlert()
+        }*/
+    }
+    /*provider?.getEarthquake(completion: { [weak self] status, data in
+        guard let self = self else { return }
+        guard let data = data else { return }
+        switch status {
+        case .success:
+            self.listData = data
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+            print("Exitoso: \(self.listData)")
+        case .failure:
+            print("error fetch data")
+        }
+    })*/
+    /*provider?.getEarthquakeCombine()
+        .sink(receiveCompletion: { completion in
+            switch completion {
+            case .finished:
+                <#code#>
+            case .failure(_):
+                self.showAlert()
+            }
+        }, receiveValue: { <#[EarthquakeModelCell]#> in
+            <#code#>
+        })*/
     
     func showAlert() {
         let alertController = UIAlertController(title: "Lo sentimos", message: "Hubo un error al cargar la información. Inténtalo de nuevo.", preferredStyle: .alert)
@@ -132,7 +180,7 @@ extension EarthquakeListViewController {
         
         view.addSubview(datePicker)
         view.addSubview(tableView)
-        view.addSubview(pagerView)
+        //view.addSubview(pagerView)
         
         NSLayoutConstraint.activate([
             
@@ -149,11 +197,7 @@ extension EarthquakeListViewController {
             .init(item: tableView, attribute: .top, relatedBy: .equal, toItem: datePicker, attribute: .bottom, multiplier: 1.0, constant: 10.0),
             .init(item: tableView, attribute: .leading, relatedBy: .equal, toItem: gradientView, attribute: .leading, multiplier: 1.0, constant: 20.0),
             .init(item: tableView, attribute: .trailing, relatedBy: .equal, toItem: gradientView, attribute: .trailing, multiplier: 1.0, constant: -20.0),
-            
-            .init(item: pagerView, attribute: .top, relatedBy: .equal, toItem: tableView, attribute: .bottom, multiplier: 1.0, constant: 10.0),
-            .init(item: pagerView, attribute: .centerX, relatedBy: .equal, toItem: gradientView, attribute: .centerX, multiplier: 1.0, constant: 0.0),
-            .init(item: pagerView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 86.0),
-            .init(item: pagerView, attribute: .bottom, relatedBy: .equal, toItem: gradientView, attribute: .bottom, multiplier: 1.0, constant: -20.0)
+            .init(item: tableView, attribute: .bottom, relatedBy: .equal, toItem: gradientView, attribute: .bottom, multiplier: 1.0, constant: -30.0)
             
         ])
     }
@@ -169,61 +213,21 @@ extension EarthquakeListViewController: DatePickerViewDelegate {
     }
 }
 
-extension EarthquakeListViewController: EarthquakePagerViewDelegate {
-    
-    func validationFirstIndex() {
-        if pagerIndex == 0 {
-            pagerView.previousPageButton.isHidden = true
-            pagerView.previousPageButton.isEnabled = false
-        } else {
-            pagerView.previousPageButton.isHidden = false
-            pagerView.previousPageButton.isEnabled = true
-        }
-    }
-    
-    func validationLastIndex() {
-        guard let lastIndex = provider?.getFullListCount() else { return }
-        if pagerIndex == lastIndex {
-            pagerView.nextPageButton.isHidden = true
-            pagerView.nextPageButton.isEnabled = false
-        } else {
-            pagerView.nextPageButton.isHidden = false
-            pagerView.nextPageButton.isEnabled = true
-        }
-    }
-    
-    func didTapNextPage() {
-        //cargar siguiente pagina
-        validationFirstIndex()
-        pagerIndex += 1
-        guard let newList = provider?.getNextIndices(index: pagerIndex) else { return }
-        print("\(listData.description)")
-        listData = newList
-        tableView.reloadData()
-        validationFirstIndex()
-    }
-    
-    func didTapPreciousPage() {
-        validationLastIndex()
-        pagerIndex -= 1
-        guard let newList = provider?.getPreviousIndices(index: pagerIndex) else { return }
-        listData = newList
-        tableView.reloadData()
-        validationLastIndex()
-    }
-}
-
-extension EarthquakeListViewController: UITableViewDelegate {
+extension EarthquakeListViewController: UITableViewDelegate, UIScrollViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         UITableView.automaticDimension
     }
     
-    /*func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let selected = listData[indexPath.row]
-        let idCell = selected.id
-        //MARK: LLAMAR A CONTROLADOR DE DETAILS
-        delegate?.didTapDetails(idCell: idCell)
-    }*/
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let position = scrollView.contentOffset.y
+        if position > (tableView.contentSize.height-100-scrollView.frame.size.height) {
+            guard let updateList = provider?.getUpdatedList() else { return }
+            self.listData.append(contentsOf: updateList)
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
 }
 
 extension EarthquakeListViewController: UITableViewDataSource {
@@ -248,3 +252,53 @@ extension EarthquakeListViewController: UITableViewDataSource {
     }
 }
 
+/*func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    let selected = listData[indexPath.row]
+    let idCell = selected.id
+    //MARK: LLAMAR A CONTROLADOR DE DETAILS
+    delegate?.didTapDetails(idCell: idCell)
+}*/
+
+/*extension EarthquakeListViewController: EarthquakePagerViewDelegate {
+    
+    func validationFirstIndex() {
+        if pagerIndex == 0 {
+            pagerView.previousPageButton.isHidden = true
+            pagerView.previousPageButton.isEnabled = false
+        } else {
+            pagerView.previousPageButton.isHidden = false
+            pagerView.previousPageButton.isEnabled = true
+        }
+    }
+    
+    func validationLastIndex() {
+        guard let lastIndex = provider?.getFullListCount() else { return }
+        if pagerIndex == lastIndex {
+            pagerView.nextPageButton.isHidden = true
+            pagerView.nextPageButton.isEnabled = false
+        } else {
+            pagerView.nextPageButton.isHidden = false
+            pagerView.nextPageButton.isEnabled = true
+        }
+    }*/
+    
+    /*func didTapNextPage() {
+        //cargar siguiente pagina
+        validationFirstIndex()
+        pagerIndex += 1
+        guard let newList = provider?.getNextIndices(index: pagerIndex) else { return }
+        print("\(listData.description)")
+        listData = newList
+        tableView.reloadData()
+        validationFirstIndex()
+    }
+    
+    func didTapPreciousPage() {
+        validationLastIndex()
+        pagerIndex -= 1
+        guard let newList = provider?.getPreviousIndices(index: pagerIndex) else { return }
+        listData = newList
+        tableView.reloadData()
+        validationLastIndex()
+    }
+}*/

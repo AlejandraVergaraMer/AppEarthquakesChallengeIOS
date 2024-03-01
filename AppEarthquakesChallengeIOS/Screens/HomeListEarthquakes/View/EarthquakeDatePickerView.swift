@@ -12,9 +12,7 @@ protocol DatePickerViewDelegate: AnyObject {
     func datePickerValueChanged()
     func didTapSearch()
 }
-/*
- func getEarthquake(completion : @escaping() -> Void)
- */
+
 class EarthquakeDatePickerView: UIView {
     
     weak var delegate: DatePickerViewDelegate?
@@ -38,20 +36,6 @@ class EarthquakeDatePickerView: UIView {
         picker.translatesAutoresizingMaskIntoConstraints = false
         return picker
     }()
-    
-    /*lazy var searchButton: UIButton = {
-        let button = UIButton()
-        var configuracion = UIButton.Configuration.borderedTinted()
-        configuracion.baseForegroundColor = .black
-        configuracion.baseBackgroundColor = .systemGray2
-        
-        button.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
-        button.addTarget(self, action: #selector(searchEarthquake), for: .touchUpInside)
-        button.configuration = configuracion
-        button.translatesAutoresizingMaskIntoConstraints = false
-                
-        return button
-    }()*/
     
     init(delegate: DatePickerViewDelegate) {
         self.delegate = delegate
@@ -104,6 +88,112 @@ extension EarthquakeDatePickerView {
         ])
     }
 }
+/*
+ class EarthquakeDatePickerView: UIView {
+     
+     weak var delegate: DatePickerViewDelegate?
+     
+     private lazy var titleLabel: UILabel = {
+         let label = UILabel(frame: .zero)
+         label.font = UIFont(name: "Arial Rounded MT Bold", size: 18)
+         label.textAlignment = .left
+         label.textColor = .black
+         label.numberOfLines = 0
+         label.translatesAutoresizingMaskIntoConstraints = false
+         label.text = "Busca por fecha"
+         
+         return label
+     }()
+     
+     private let startDatePicker: UIDatePicker = {
+         let picker = UIDatePicker()
+         picker.datePickerMode = .date
+         picker.addTarget(picker, action: #selector(datePickerValueChanged), for: .valueChanged)
+         picker.translatesAutoresizingMaskIntoConstraints = false
+         return picker
+     }()
+     
+     private let endDatePicker: UIDatePicker = {
+         let picker = UIDatePicker()
+         picker.datePickerMode = .date
+         picker.addTarget(picker, action: #selector(datePickerValueChanged), for: .valueChanged)
+         picker.translatesAutoresizingMaskIntoConstraints = false
+         return picker
+     }()
+     
+     lazy var searchButton: UIButton = {
+         let button = UIButton()
+         var configuracion = UIButton.Configuration.borderedTinted()
+         configuracion.baseForegroundColor = .black
+         configuracion.baseBackgroundColor = .systemGray2
+         
+         button.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
+         button.addTarget(self, action: #selector(searchEarthquake), for: .touchUpInside)
+         button.configuration = configuracion
+         button.translatesAutoresizingMaskIntoConstraints = false
+                 
+         return button
+     }()
+     
+     init(delegate: DatePickerViewDelegate) {
+         self.delegate = delegate
+         super.init(frame: .zero)
+         
+         setupView()
+     }
+     
+     required init?(coder: NSCoder) {
+         fatalError("init(coder:) has not been implemented")
+     }
+     
+     @objc
+     private func datePickerValueChanged() {
+         let selectedDate = datePicker.date
+         // Aquí puedes aplicar la lógica de filtrado con la fecha seleccionada
+         print("Fecha seleccionada: \(selectedDate)")
+         delegate?.datePickerValueChanged()
+     }
+     
+     @objc
+     private func searchEarthquake() {
+         delegate?.didTapSearch()
+     }
+     
+ }
+
+ extension EarthquakeDatePickerView {
+     private func setupView(){
+         
+         self.addSubview(titleLabel)
+         self.addSubview(startDatePicker)
+         self.addSubview(endDatePicker)
+         self.addSubview(searchButton)
+         
+         NSLayoutConstraint.activate([
+             
+             .init(item: titleLabel, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 10.0),
+             .init(item: titleLabel, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 20.0),
+             .init(item: titleLabel, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: -20.0),
+             
+             .init(item: startDatePicker, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 10.0),
+             .init(item: startDatePicker, attribute: .leading, relatedBy: .equal, toItem: titleLabel, attribute: .trailing, multiplier: 1.0, constant: 0.0),
+             .init(item: startDatePicker, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: -20.0),
+             .init(item: startDatePicker, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: -20.0),
+             
+             .init(item: endDatePicker, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 10.0),
+             .init(item: endDatePicker, attribute: .leading, relatedBy: .equal, toItem: startDatePicker, attribute: .trailing, multiplier: 1.0, constant: 0.0),
+             .init(item: endDatePicker, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: -20.0),
+             .init(item: endDatePicker, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: -20.0),
+             
+             .init(item: searchButton, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 10.0),
+             .init(item: searchButton, attribute: .leading, relatedBy: .equal, toItem: endDatePicker, attribute: .trailing, multiplier: 1.0, constant: 10.0),
+             .init(item: searchButton, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: -20.0),
+             .init(item: searchButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 20.0),
+             .init(item: searchButton, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 20.0),
+         ])
+     }
+ }
+ */
 
 /*
  view.addSubview(datePicker)
