@@ -20,7 +20,7 @@ class EarthquakeListViewController: UIViewController {
     private var pagerIndex: Int = 0
     private var listData: [EarthquakeModelCell] = []
     weak var delegate: EarthquakeViewControllerDelegate?
-    private var cancellables = Set<AnyCancellable>()
+    //private var cancellables = Set<AnyCancellable>()
     
     
     private lazy var datePicker: EarthquakeDatePickerView = {
@@ -89,74 +89,36 @@ class EarthquakeListViewController: UIViewController {
     }
     
     private func fetchData() async {
-        provider?.getEarthquakeCombine(startTime: "2020-01-01", endTime: "2020-01-02")
-                .sink(receiveCompletion: { completion in
-                    switch completion {
-                    case .finished:
-                        break
-                    case .failure(let error):
-                        self.showAlert()
-                        print("Error fetching earthquake data: \(error)")
-                    }
-                }, receiveValue: { (status, earthquakes) in
-                    // Aquí puedes actualizar tu tabla con los datos de los terremotos
-                    // earthquakeArray contiene los modelos de terremotos
-                    guard let earthquakes = earthquakes else { return }
-                    self.listData = earthquakes
-                    DispatchQueue.main.async {
-                        self.tableView.reloadData()
-                    }
-                })
-                .store(in: &cancellables)
-        /*do {
-            //guard let provider = provider else { return }
-            let (status, data) = try await provider?.getEarthquakeCombine(startTime: "2020-01-01", endTime: "2020-01-02")
-            guard status == .success, let data = data else {
-                self.showAlert()
-                return
-            }
+        /*guard let provider = provider else { return }
+        
+        let cancellable = provider.getEarthquakeCombine(startTime: "2020-01-01", endTime: "2020-01-02")
+            .sink { completion in
+                switch completion {
+                case .failure(let error):
+                    print("Error: \(error)")
+                    self.showAlert()
+                case .finished:
+                    break
+                }
+            } receiveValue: { data in
+                guard let data = data else { return }
+                self.listData = data
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            }*/
+        do {
+            guard let result = try await provider?.getEarthquakeListCombine(startTime: "2020-01-01", endTime: "2020-01-02") else { return }
+            guard let data = result.1 else { return }
             self.listData = data
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
         } catch {
             self.showAlert()
-        }*/
-        /*do {
-            guard let data = try await provider?.getEarthquakeCombine() else { return }
-            self.listData = data
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
-        } catch {
-            self.showAlert()
-        }*/
-    }
-    /*provider?.getEarthquake(completion: { [weak self] status, data in
-        guard let self = self else { return }
-        guard let data = data else { return }
-        switch status {
-        case .success:
-            self.listData = data
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
-            print("Exitoso: \(self.listData)")
-        case .failure:
-            print("error fetch data")
         }
-    })*/
-    /*provider?.getEarthquakeCombine()
-        .sink(receiveCompletion: { completion in
-            switch completion {
-            case .finished:
-                <#code#>
-            case .failure(_):
-                self.showAlert()
-            }
-        }, receiveValue: { <#[EarthquakeModelCell]#> in
-            <#code#>
-        })*/
+        
+    }
     
     func showAlert() {
         let alertController = UIAlertController(title: "Lo sentimos", message: "Hubo un error al cargar la información. Inténtalo de nuevo.", preferredStyle: .alert)
@@ -202,7 +164,73 @@ extension EarthquakeListViewController {
         ])
     }
 }
-
+/*provider?.getEarthquakeCombine(startTime: "2020-01-01", endTime: "2020-01-02")
+        .sink(receiveCompletion: { completion in
+            switch completion {
+            case .finished:
+                break
+            case .failure(let error):
+                self.showAlert()
+                print("Error fetching earthquake data: \(error)")
+            }
+        }, receiveValue: { (status, earthquakes) in
+            // Aquí puedes actualizar tu tabla con los datos de los terremotos
+            // earthquakeArray contiene los modelos de terremotos
+            guard let earthquakes = earthquakes else { return }
+            self.listData = earthquakes
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        })
+        .store(in: &cancellables)*/
+/*do {
+    //guard let provider = provider else { return }
+    let (status, data) = try await provider?.getEarthquakeCombine(startTime: "2020-01-01", endTime: "2020-01-02")
+    guard status == .success, let data = data else {
+        self.showAlert()
+        return
+    }
+    self.listData = data
+    DispatchQueue.main.async {
+        self.tableView.reloadData()
+    }
+} catch {
+    self.showAlert()
+}*/
+/*do {
+    guard let data = try await provider?.getEarthquakeCombine() else { return }
+    self.listData = data
+    DispatchQueue.main.async {
+        self.tableView.reloadData()
+    }
+} catch {
+    self.showAlert()
+}*/
+/*provider?.getEarthquake(completion: { [weak self] status, data in
+    guard let self = self else { return }
+    guard let data = data else { return }
+    switch status {
+    case .success:
+        self.listData = data
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+        print("Exitoso: \(self.listData)")
+    case .failure:
+        print("error fetch data")
+    }
+})*/
+/*provider?.getEarthquakeCombine()
+    .sink(receiveCompletion: { completion in
+        switch completion {
+        case .finished:
+            <#code#>
+        case .failure(_):
+            self.showAlert()
+        }
+    }, receiveValue: { <#[EarthquakeModelCell]#> in
+        <#code#>
+    })*/
 extension EarthquakeListViewController: DatePickerViewDelegate {
     func datePickerValueChanged() {
         //BUSCAR POR FECHA

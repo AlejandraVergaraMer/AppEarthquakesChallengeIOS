@@ -11,8 +11,9 @@ import Combine
 protocol EarthquakeListProviderProtocol {
     func getNextIndices()
     func getUpdatedList() -> [EarthquakeModelCell]
-    //func getEarthquakeCombine(starTime: String, endTime: String) async throws -> (StatusCaseEnum, [EarthquakeModelCell]?)
-    func getEarthquakeCombine(startTime: String, endTime: String) -> AnyPublisher<(StatusCaseEnum, [EarthquakeModelCell]?), Error>
+    func getEarthquakeCombine() async throws -> (StatusCaseEnum, [EarthquakeModelCell]?)
+    func getEarthquakeListCombine(startTime: String, endTime: String) async throws -> (StatusCaseEnum, [EarthquakeModelCell]?)
+    //func getEarthquakeCombine(startTime: String, endTime: String) -> AnyPublisher<[EarthquakeModelCell]?, NetworkError>
 }
 
 class EarthquakeListProvider: EarthquakeListProviderProtocol {
@@ -29,13 +30,13 @@ class EarthquakeListProvider: EarthquakeListProviderProtocol {
         self.serviceApi = serviceApi
     }
     
-    func getEarthquakeCombine(startTime: String, endTime: String) -> AnyPublisher<(StatusCaseEnum, [EarthquakeModelCell]?), Error> {
+    /*func getEarthquakeCombine(startTime: String, endTime: String) -> AnyPublisher<[EarthquakeModelCell]?, NetworkError> {
         guard let serviceApi = serviceApi else {
-            return Fail(error: NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "Service API is not available"])).eraseToAnyPublisher()
+            return Fail(error: NetworkError.apiError(code: 0, error: "Error service api")).eraseToAnyPublisher()
         }
         
         return serviceApi.getEarthquakeListCombine(startTime: startTime, endTime: endTime)
-            .map { data -> (StatusCaseEnum, [EarthquakeModelCell]?) in
+            .map { data -> [EarthquakeModelCell]? in
                 let earthquakeArray = data.earthquakes.map { earthquake -> EarthquakeModelCell in
                     let objet = EarthquakeModelCell(
                         title: earthquake.properties.title,
@@ -45,11 +46,39 @@ class EarthquakeListProvider: EarthquakeListProviderProtocol {
                         id: earthquake.id)
                     return objet
                 }
-                return (.success, earthquakeArray)
+                self.listOriginal = earthquakeArray
+                self.getNextIndices()
+                return self.listToShow
             }
             .eraseToAnyPublisher()
+    }*/
+    func getEarthquakeListCombine(startTime: String, endTime: String) async throws -> (StatusCaseEnum, [EarthquakeModelCell]?) {
+        guard let serviceApi = serviceApi else {
+                throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "Service API is not available"])
+        }
+        do {
+            let (status, data) = try await serviceApi.getEarthquakesCombine(startTime: startTime, endTime: endTime)
+            guard status == .success, let listEarthquake = data?.earthquakes else {
+                throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "No data available"])
+            }
+            let earthquakeArray = listEarthquake.map({ earthquake -> EarthquakeModelCell in
+                let objet = EarthquakeModelCell(
+                    title: earthquake.properties.title,
+                    place: earthquake.properties.place,
+                    magnitude: earthquake.properties.mag,
+                    depth: earthquake.geometry.coordinates[2],
+                    id: earthquake.id)
+                return objet
+            })
+            self.listOriginal = earthquakeArray
+            self.getNextIndices()
+            return (StatusCaseEnum.success, self.listToShow)
+        } catch {
+            throw error
+        }
     }
-    /*func getEarthquakeCombine(starTime: String, endTime: String) async throws -> (StatusCaseEnum, [EarthquakeModelCell]?) {
+    
+    func getEarthquakeCombine() async throws -> (StatusCaseEnum, [EarthquakeModelCell]?) {
         guard let serviceApi = serviceApi else {
                 throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "Service API is not available"])
         }
@@ -73,7 +102,7 @@ class EarthquakeListProvider: EarthquakeListProviderProtocol {
         } catch {
             throw error
         }
-    }*/
+    }
     
     func getNextIndices(){
         let starIndex = index * 10

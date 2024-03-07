@@ -37,7 +37,7 @@ class CoordinatorGeneral: Coordinator {
             navigationController?.isNavigationBarHidden = true
             navigationController?.pushViewController(controller, animated: true)
         } else {
-            let serviceHome = EarthquakeListService(startTime: "2020-01-01", endTime: "2020-01-02")
+            let serviceHome = EarthquakeListService()
             let providerHome = EarthquakeListProvider(serviceApi: serviceHome)
             let controller = EarthquakeListViewController(provider: providerHome, delegate: self)
             navigationController?.isNavigationBarHidden = false
@@ -49,7 +49,7 @@ class CoordinatorGeneral: Coordinator {
 extension CoordinatorGeneral: LoginViewDelegate {
     func didTapLogin() {
         debugPrint("Fue a pantalla Home")
-        let serviceHome = EarthquakeListService(startTime: "2020-01-01", endTime: "2020-01-02")
+        let serviceHome = EarthquakeListService()
         let providerHome = EarthquakeListProvider(serviceApi: serviceHome)
         let controller = EarthquakeListViewController(provider: providerHome, delegate: self)
         navigationController?.isNavigationBarHidden = false

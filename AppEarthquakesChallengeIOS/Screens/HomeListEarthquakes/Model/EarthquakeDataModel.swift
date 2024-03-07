@@ -18,14 +18,26 @@ struct Properties: Codable {
     let title: String
 }
 
-struct EarthquakeDataModel: Decodable {
+struct EarthquakeDataModel: Decodable, Encodable {
     let type: String
     let properties: Properties
     let geometry: Geometry
     let id: String
+    
+    enum CodingKeys: String, CodingKey {
+        case type, properties, geometry, id
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(type, forKey: .type)
+        try container.encode(properties, forKey: .properties)
+        try container.encode(geometry, forKey: .geometry)
+        try container.encode(id, forKey: .id)
+    }
 }
 
-struct EarthquakeResponseDataModel: Decodable {
+struct EarthquakeResponseDataModel: Decodable, Encodable {
     let earthquakes: [EarthquakeDataModel]
     
     enum CodingKeys: String, CodingKey {
@@ -35,5 +47,10 @@ struct EarthquakeResponseDataModel: Decodable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.earthquakes = try container.decode([EarthquakeDataModel].self, forKey: .results)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(earthquakes, forKey: .results)
     }
 }
