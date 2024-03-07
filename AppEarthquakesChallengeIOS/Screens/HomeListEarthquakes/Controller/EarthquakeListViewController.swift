@@ -76,19 +76,22 @@ class EarthquakeListViewController: UIViewController {
         let closeButton = UIBarButtonItem(title: "Salir", style: .done, target: self, action: #selector(closeSession))
         closeButton.tintColor = UIColor.black
         self.navigationItem.rightBarButtonItem = closeButton
-        Task {
-            await fetchData()
-        }
+        fetchInitialData()
     }
     
     override func loadView() {
         super.loadView()
         setupView()
     }
+    private func fetchInitialData() {
+        Task {
+            await fetchData(startTime: "2020-01-01", endTime: "2020-01-02")
+        }
+    }
     
-    private func fetchData() async {
+    private func fetchData(startTime: String, endTime: String) async {
         do {
-            guard let result = try await provider?.getEarthquakeListCombine(startTime: "2020-01-01", endTime: "2020-01-02") else { return }
+            guard let result = try await provider?.getEarthquakeListCombine(startTime: startTime, endTime: endTime) else { return }
             guard let data = result.1 else { return }
             self.listData = data
             DispatchQueue.main.async {
@@ -97,7 +100,6 @@ class EarthquakeListViewController: UIViewController {
         } catch {
             self.showAlert()
         }
-        
     }
     
     func showAlert() {
@@ -132,7 +134,7 @@ extension EarthquakeListViewController {
             .init(item: datePicker, attribute: .top, relatedBy: .equal, toItem: gradientView.safeAreaLayoutGuide, attribute: .top, multiplier: 1.0, constant: 0.0),
             .init(item: datePicker, attribute: .leading, relatedBy: .equal, toItem: gradientView, attribute: .leading, multiplier: 1.0, constant: 0.0),
             .init(item: datePicker, attribute: .trailing, relatedBy: .equal, toItem: gradientView, attribute: .trailing, multiplier: 1.0, constant: 0.0),
-            .init(item: datePicker, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 60.0),
+            //.init(item: datePicker, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 50.0),
                 
             .init(item: tableView, attribute: .top, relatedBy: .equal, toItem: datePicker, attribute: .bottom, multiplier: 1.0, constant: 10.0),
             .init(item: tableView, attribute: .leading, relatedBy: .equal, toItem: gradientView, attribute: .leading, multiplier: 1.0, constant: 20.0),
@@ -143,12 +145,11 @@ extension EarthquakeListViewController {
     }
 }
 extension EarthquakeListViewController: DatePickerViewDelegate {
-    func datePickerValueChanged() {
+    func didTapSearch(startTime: String, endTime: String) {
         //BUSCAR POR FECHA
-    }
-    
-    func didTapSearch() {
-        //BUSCAR POR FECHA
+        Task {
+            await fetchData(startTime: startTime, endTime: endTime)
+        }
     }
 }
 
