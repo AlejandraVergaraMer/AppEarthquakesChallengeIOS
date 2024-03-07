@@ -80,8 +80,6 @@ enum EventsEndpoints: EndPoints {
     
     var parameter: [URLQueryItem] {
         switch self {
-        /*case .getEarthquakeMockTwo:
-            return [URLQueryItem(name: "starttime", value: "2020-01-01"), URLQueryItem(name: "endtime", value: "2020-01-02")]*/
         case .getEarthquakes(startTime: let startTime, endTime: let endTime):
             return [URLQueryItem(name: "format", value: "geojson"), URLQueryItem(name: "starttime", value: startTime), URLQueryItem(name: "endtime", value: endTime)]
         case .getEarthquakesMock(startTime: let startTime, endTime: let endTime):
