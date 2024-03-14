@@ -11,7 +11,7 @@ import Foundation
 struct EarthquakesDetailModel: Decodable {
     let earthquakes: EarthquakeDetailModel
     enum CodingKeys: String, CodingKey {
-        case earthquakes = "features"
+        case earthquakes = "properties"
     }
 }
 class EarthquakeDetailModel: Decodable {

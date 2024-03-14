@@ -10,6 +10,9 @@
 		A78028352B8F812F00174609 /* DateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A78028342B8F812F00174609 /* DateManager.swift */; };
 		A780283A2B8FA57000174609 /* EndPoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = A78028392B8FA57000174609 /* EndPoints.swift */; };
 		A780283C2B8FA93F00174609 /* RequestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A780283B2B8FA93F00174609 /* RequestModel.swift */; };
+		A7CB34DB2BA13BD800B074E3 /* HTTPMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7CB34DA2BA13BD800B074E3 /* HTTPMethod.swift */; };
+		A7CB34DD2BA13C1B00B074E3 /* EventsEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7CB34DC2BA13C1B00B074E3 /* EventsEndpoints.swift */; };
+		A7CB34E02BA29FEF00B074E3 /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7CB34DF2BA29FEF00B074E3 /* SessionManager.swift */; };
 		A7E42DCA2B7DC4BD00666387 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7E42DC92B7DC4BD00666387 /* AppDelegate.swift */; };
 		A7E42DCC2B7DC4BD00666387 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7E42DCB2B7DC4BD00666387 /* SceneDelegate.swift */; };
 		A7E42DD32B7DC4BF00666387 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A7E42DD22B7DC4BF00666387 /* Assets.xcassets */; };
@@ -45,6 +48,9 @@
 		A78028342B8F812F00174609 /* DateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateManager.swift; sourceTree = "<group>"; };
 		A78028392B8FA57000174609 /* EndPoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndPoints.swift; sourceTree = "<group>"; };
 		A780283B2B8FA93F00174609 /* RequestModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestModel.swift; sourceTree = "<group>"; };
+		A7CB34DA2BA13BD800B074E3 /* HTTPMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPMethod.swift; sourceTree = "<group>"; };
+		A7CB34DC2BA13C1B00B074E3 /* EventsEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsEndpoints.swift; sourceTree = "<group>"; };
+		A7CB34DF2BA29FEF00B074E3 /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
 		A7E42DC62B7DC4BD00666387 /* AppEarthquakesChallengeIOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppEarthquakesChallengeIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A7E42DC92B7DC4BD00666387 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A7E42DCB2B7DC4BD00666387 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -92,6 +98,7 @@
 		A78028362B8FA4BE00174609 /* Publics */ = {
 			isa = PBXGroup;
 			children = (
+				A7E42DE12B7DC5AD00666387 /* View */,
 				A7E42DE02B7DC5A400666387 /* Enum */,
 				A78028382B8FA52400174609 /* Protocols */,
 				A78028372B8FA4DE00174609 /* Classes */,
@@ -104,6 +111,7 @@
 			children = (
 				A78028342B8F812F00174609 /* DateManager.swift */,
 				A780283B2B8FA93F00174609 /* RequestModel.swift */,
+				A7CB34DF2BA29FEF00B074E3 /* SessionManager.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -114,6 +122,15 @@
 				A78028392B8FA57000174609 /* EndPoints.swift */,
 			);
 			path = Protocols;
+			sourceTree = "<group>";
+		};
+		A7CB34DE2BA13C2100B074E3 /* Api */ = {
+			isa = PBXGroup;
+			children = (
+				A7CB34DC2BA13C1B00B074E3 /* EventsEndpoints.swift */,
+				A7CB34DA2BA13BD800B074E3 /* HTTPMethod.swift */,
+			);
+			path = Api;
 			sourceTree = "<group>";
 		};
 		A7E42DBD2B7DC4BD00666387 = {
@@ -150,7 +167,6 @@
 			isa = PBXGroup;
 			children = (
 				A78028362B8FA4BE00174609 /* Publics */,
-				A7E42DE12B7DC5AD00666387 /* View */,
 				A7E42DDF2B7DC59C00666387 /* Coordinator */,
 			);
 			path = General;
@@ -178,6 +194,7 @@
 		A7E42DE02B7DC5A400666387 /* Enum */ = {
 			isa = PBXGroup;
 			children = (
+				A7CB34DE2BA13C2100B074E3 /* Api */,
 				A7E42DE42B7DC66800666387 /* EnumTypeTextField .swift */,
 				A7E42DE62B7DC68800666387 /* StatusCaseEnum.swift */,
 			);
@@ -443,16 +460,19 @@
 				A7E42E172B7DD12000666387 /* EarthquakeTableViewDataSource.swift in Sources */,
 				A7E42E1D2B84EC5E00666387 /* EarthquakeDetailModel.swift in Sources */,
 				A780283A2B8FA57000174609 /* EndPoints.swift in Sources */,
+				A7CB34DB2BA13BD800B074E3 /* HTTPMethod.swift in Sources */,
 				A7E42DCC2B7DC4BD00666387 /* SceneDelegate.swift in Sources */,
 				A7E42E0B2B7DCF6400666387 /* EarthquakeDatePickerView.swift in Sources */,
 				A7E42DE92B7DC6DC00666387 /* EarthquakesTextField.swift in Sources */,
 				A78028352B8F812F00174609 /* DateManager.swift in Sources */,
+				A7CB34DD2BA13C1B00B074E3 /* EventsEndpoints.swift in Sources */,
 				A7E42DEB2B7DC71200666387 /* EarthquakeLabelView.swift in Sources */,
 				A7E42DF12B7DC7CF00666387 /* LoginView.swift in Sources */,
 				A7E42E0D2B7DCFEA00666387 /* EarthquakeListService.swift in Sources */,
 				A7E42DE52B7DC66800666387 /* EnumTypeTextField .swift in Sources */,
 				A7E42E152B7DD0EB00666387 /* EarthquakeListViewController.swift in Sources */,
 				A7E42E1F2B84EE9900666387 /* DetailEarthquakeService.swift in Sources */,
+				A7CB34E02BA29FEF00B074E3 /* SessionManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

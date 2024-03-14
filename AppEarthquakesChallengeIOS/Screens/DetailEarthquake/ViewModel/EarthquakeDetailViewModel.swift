@@ -16,17 +16,34 @@ class EarthquakeDetailViewModel: ObservableObject {
         self.data = data
         self.provider = provider
         
-        fetchData()
+        //fetchDataCompletion()
+        Task {
+            await fetchDataCombine()
+        }
     }
 
-    func fetchData() {
-        provider?.getDetailFromList(completion: { status, data, error in
-            if let data = data {
+    func fetchDataCombine() async {
+        do {
+            guard let result = try await provider?.getDetailFromListCombine() else { return }
+            guard let data = result.1 else { return }
+            DispatchQueue.main.async {
                 self.status = .success
                 self.data = data
-            } else {
-                self.status = .failure
+            }
+        } catch {
+            self.status = .failure
+        }
+    }
+    /*func fetchDataCompletion() {
+        provider?.getDetailFromList(completion: { status, data, error in
+            DispatchQueue.main.async {
+                if let data = data {
+                    self.status = .success
+                    self.data = data
+                } else {
+                    self.status = .failure
+                }
             }
         })
-    }
+    }*/
 }

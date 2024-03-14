@@ -27,122 +27,46 @@ struct RegisterView: View {
             LinearGradient(gradient: Gradient(colors: [.white, .gray.opacity(0.5), .pink.opacity(0.3), .red.opacity(0.8)]), startPoint: .top, endPoint: .bottom)
                 .edgesIgnoringSafeArea(.all)
             VStack {
-                VStack(alignment: .leading) {
-                    Text(viewModel.firtsNameType.titleTextField)
-                        .font(.system(size: 18))
-                        .fontWeight(.bold)
-                        .foregroundColor(.secondary)
-                    TextField(viewModel.firtsNameType.placeholderTextField, text: $userFirtsName)
-                        .padding()
-                        .background(Color.white)
-                        .cornerRadius(5)
-                        .shadow(radius: 5)
-                        .onChange(of: userFirtsName) { newValue in
-                            showFirtsNameValidation = !newValue.isEmpty
-                            showFirtsNameValidation = viewModel.isValidTextField(newValue, type: viewModel.firtsNameType)
-                            
-                            isRegisterButtonEnable = !showFirtsNameValidation && !userLastName.isEmpty && !userEmail.isEmpty && !userPassword.isEmpty && !userRepeatPassword.isEmpty
-                        }
-                    if showFirtsNameValidation {
-                        Text(viewModel.firtsNameType.validationText)
-                            .font(.system(size: 14))
-                            .foregroundColor(.red)
-                    }
-                }
-                .padding(.bottom, 10)
-                VStack(alignment: .leading) {
-                    Text(viewModel.lastNameType.titleTextField)
-                        .font(.system(size: 18))
-                        .fontWeight(.bold)
-                        .foregroundColor(.secondary)
-                    TextField(viewModel.lastNameType.placeholderTextField, text: $userLastName)
-                        .padding()
-                        .background(Color.white)
-                        .cornerRadius(5)
-                        .shadow(radius: 5)
-                        .onChange(of: userLastName) { newValue in
-                            showLastNameValidation = !newValue.isEmpty
-                            showLastNameValidation = viewModel.isValidTextField(newValue, type: viewModel.lastNameType)
-                            isRegisterButtonEnable = !userFirtsName.isEmpty && !showLastNameValidation && !userEmail.isEmpty && !userPassword.isEmpty && !userRepeatPassword.isEmpty
-                        }
-                    if showLastNameValidation {
-                        Text(viewModel.lastNameType.validationText)
-                            .font(.system(size: 14))
-                            .foregroundColor(.red)
-                    }
-                }
-                .padding(.bottom, 10)
-                VStack(alignment: .leading) {
-                    Text(viewModel.emailType.titleTextField)
-                        .font(.system(size: 18))
-                        .fontWeight(.bold)
-                        .foregroundColor(.secondary)
-                    TextField(viewModel.emailType.placeholderTextField, text: $userEmail)
-                        .padding()
-                        .background(Color.white)
-                        .cornerRadius(5)
-                        .shadow(radius: 5)
-                        .onChange(of: userEmail) { newValue in
-                            showEmailValidation = !newValue.isEmpty
-                            showEmailValidation = viewModel.isValidTextField(newValue, type: viewModel.emailType)
-                            isRegisterButtonEnable = !userFirtsName.isEmpty && !userLastName.isEmpty && !showEmailValidation && !userPassword.isEmpty && !userRepeatPassword.isEmpty
-                        }
-                    if showEmailValidation {
-                        Text(viewModel.emailType.validationText)
-                            .font(.system(size: 14))
-                            .foregroundColor(.red)
-                    }
-                }
-                .padding(.bottom, 10)
-                VStack(alignment: .leading) {
-                    Text(viewModel.passwordType.titleTextField)
-                        .font(.system(size: 18))
-                        .fontWeight(.bold)
-                        .foregroundColor(.secondary)
-                    SecureField(viewModel.passwordType.placeholderTextField, text: $userPassword)
-                        .padding()
-                        .background(Color.white)
-                        .cornerRadius(5)
-                        .shadow(radius: 5)
-                        .onChange(of: userPassword) { newValue in
-                            showPasswordValidation = !newValue.isEmpty
-                            showPasswordValidation = viewModel.isValidTextField(newValue, type: viewModel.passwordType)
-                            isRegisterButtonEnable = !userFirtsName.isEmpty && !userLastName.isEmpty && !userEmail.isEmpty && !showPasswordValidation && !userRepeatPassword.isEmpty
-                        }
-                    if showPasswordValidation {
-                        Text(viewModel.passwordType.validationText)
-                            .font(.system(size: 14))
-                            .foregroundColor(.red)
-                    }
-                }
-                .padding(.bottom, 10)
-                VStack(alignment: .leading) {
-                    Text(viewModel.repeatPassword.titleTextField)
-                        .font(.system(size: 18))
-                        .fontWeight(.bold)
-                        .foregroundColor(.secondary)
-                    SecureField(viewModel.repeatPassword.placeholderTextField, text: $userRepeatPassword)
-                        .padding()
-                        .background(Color.white)
-                        .cornerRadius(5)
-                        .shadow(radius: 5)
-                        .onChange(of: userRepeatPassword) { newValue in
-                            showRepeatPasswordValidation = !newValue.isEmpty
-                            showRepeatPasswordValidation = userPassword != newValue
-                            isRegisterButtonEnable = !userFirtsName.isEmpty && !userLastName.isEmpty && !userEmail.isEmpty && !userPassword.isEmpty && !showRepeatPasswordValidation
-                        }
-                    if showRepeatPasswordValidation {
-                        Text(viewModel.repeatPassword.validationText)
-                            .font(.system(size: 14))
-                            .foregroundColor(.red)
-                    }
-                }
-                .padding(.bottom, 20)
-                
+                EarthquakesTextField(typeTextField: viewModel.firtsNameType, text: $userFirtsName, showTextValidation: $showFirtsNameValidation)
+                    .onChange(of: userFirtsName, perform: { newValue in
+                        showFirtsNameValidation = !newValue.isEmpty
+                        showFirtsNameValidation = viewModel.isValidTextField(newValue, type: viewModel.firtsNameType)
+                        
+                        isRegisterButtonEnable = !showFirtsNameValidation && !userLastName.isEmpty && !userEmail.isEmpty && !userPassword.isEmpty && !userRepeatPassword.isEmpty
+                    })
+                    .padding(.bottom, 10)
+                EarthquakesTextField(typeTextField: viewModel.lastNameType, text: $userLastName, showTextValidation: $showLastNameValidation)
+                    .onChange(of: userLastName, perform: { newValue in
+                        showLastNameValidation = !newValue.isEmpty
+                        showLastNameValidation = viewModel.isValidTextField(newValue, type: viewModel.lastNameType)
+                        isRegisterButtonEnable = !userFirtsName.isEmpty && !showLastNameValidation && !userEmail.isEmpty && !userPassword.isEmpty && !userRepeatPassword.isEmpty
+                    })
+                    .padding(.bottom, 10)
+                EarthquakesTextField(typeTextField: viewModel.emailType, text: $userEmail, showTextValidation: $showEmailValidation)
+                    .onChange(of: userEmail, perform: { newValue in
+                        showEmailValidation = !newValue.isEmpty
+                        showEmailValidation = viewModel.isValidTextField(newValue, type: viewModel.emailType)
+                        isRegisterButtonEnable = !userFirtsName.isEmpty && !userLastName.isEmpty && !showEmailValidation && !userPassword.isEmpty && !userRepeatPassword.isEmpty
+                    })
+                    .padding(.bottom, 10)
+                EarthquakesTextField(typeTextField: viewModel.passwordType, text: $userPassword, showTextValidation: $showPasswordValidation)
+                    .onChange(of: userPassword, perform: { newValue in
+                        showPasswordValidation = !newValue.isEmpty
+                        showPasswordValidation = viewModel.isValidTextField(newValue, type: viewModel.passwordType)
+                        isRegisterButtonEnable = !userFirtsName.isEmpty && !userLastName.isEmpty && !userEmail.isEmpty && !showPasswordValidation && !userRepeatPassword.isEmpty
+                    })
+                    .padding(.bottom, 10)
+                EarthquakesTextField(typeTextField: viewModel.repeatPassword, text: $userRepeatPassword, showTextValidation: $showRepeatPasswordValidation)
+                    .onChange(of: userRepeatPassword, perform: { newValue in
+                        showRepeatPasswordValidation = !newValue.isEmpty
+                        showRepeatPasswordValidation = userPassword != newValue
+                        isRegisterButtonEnable = !userFirtsName.isEmpty && !userLastName.isEmpty && !userEmail.isEmpty && !userPassword.isEmpty && !showRepeatPasswordValidation
+                    })
+                    .padding(.bottom, 20)
                 Button("Registrarse") {
                     if !showFirtsNameValidation && !showLastNameValidation && !showEmailValidation && !showPasswordValidation && !showRepeatPasswordValidation {
                         debugPrint("\(!showFirtsNameValidation) && \(!showLastNameValidation) && \(!showEmailValidation) && \(!showPasswordValidation) && \(!showRepeatPasswordValidation)")
-                        viewModel.saveUserData(firtsName: userFirtsName,lastName: userLastName,
+                        SessionManager.shared.saveUserData(firtsName: userFirtsName,lastName: userLastName,
                                                email: userEmail, password: userPassword)
                         viewModel.successAlert()
                     } else {
@@ -164,31 +88,6 @@ struct RegisterView: View {
         }
     }
 }
-/*EarthquakesTextField(typeTextField: .firtsName)
-    .padding(.bottom, 10)
-
-EarthquakesTextField(typeTextField: .lastName)
-    .padding(.bottom, 10)
-
-EarthquakesTextField(typeTextField: .email)
-    .padding(.bottom, 10)
-
-EarthquakesTextField(typeTextField: .password)
-    .padding(.bottom, 10)
-
-EarthquakesTextField(typeTextField: .repeatPassword)
-    .padding(.bottom, 20)*/
-/*Button("Volver") {
-    
-}
-.font(.title3)
-.fontWeight(.bold)
-.foregroundColor(.secondary)
-.padding(.vertical, 5)
-.padding(.horizontal, 30)
-.background(.white)
-.border(Color.secondary, width:  2)
-.cornerRadius(5)*/
 
 struct RegisterView_Previews: PreviewProvider {
     static var previews: some View {

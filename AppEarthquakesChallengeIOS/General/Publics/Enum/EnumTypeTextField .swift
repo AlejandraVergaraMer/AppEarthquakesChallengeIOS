@@ -60,4 +60,13 @@ enum TypeTextField {
             return "Debes escribir al menos 3 caracteres"
         }
     }
+    
+    var isSecureCamp: Bool {
+        switch self {
+        case .email, .firtsName, .lastName:
+            return false
+        case .password, .loginPassword, .repeatPassword:
+            return true
+        }
+    }
 }

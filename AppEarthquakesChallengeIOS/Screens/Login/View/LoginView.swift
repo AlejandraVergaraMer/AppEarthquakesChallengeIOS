@@ -37,53 +37,25 @@ struct LoginView: View {
                     .edgesIgnoringSafeArea(.all)
                 VStack {
                     Spacer()
-                    VStack(alignment: .leading) {
-                        Text(emailType.titleTextField)
-                            .font(.title2)
-                            .fontWeight(.bold)
-                            .foregroundColor(.secondary)
-                        TextField(emailType.placeholderTextField, text: $userEmail)
-                            .padding()
-                            .background(Color.white)
-                            .cornerRadius(5)
-                            .shadow(radius: 5)
-                            .onChange(of: userEmail) { newValue in
-                                let saveEmail = UserDefaults.standard.string(forKey: "email")
-                                showEmailValidation = newValue != saveEmail//!newValue.isEmpty
-                            }
-                        if showEmailValidation {
-                            Text(emailType.validationText)
-                                .font(.system(size: 14))
-                                .foregroundColor(.red)
+                    EarthquakesTextField(typeTextField: emailType, text: $userEmail, showTextValidation: $showEmailValidation)
+                        .onChange(of: userEmail) { newValue in
+                            let saveEmail = UserDefaults.standard.string(forKey: "email")
+                            showEmailValidation = newValue != saveEmail//!newValue.isEmpty
                         }
-                    }
-                    .padding(.bottom, 30)
-                    VStack(alignment: .leading) {
-                        Text(passwordType.titleTextField)
-                            .font(.title2)
-                            .fontWeight(.bold)
-                            .foregroundColor(.secondary)
-                        SecureField(passwordType.placeholderTextField, text: $userPassword)
-                            .padding()
-                            .background(Color.white)
-                            .cornerRadius(5)
-                            .shadow(radius: 5)
-                            .onChange(of: userPassword) { newValue in
-                                let savePassword = UserDefaults.standard.string(forKey: "password")
-                                showPasswordValidation = newValue != savePassword
-                            }
-                        if showPasswordValidation {
-                            Text(passwordType.validationText)
-                                .font(.system(size: 14))
-                                .foregroundColor(.red)
-                        }
-                    }
-                    .padding(.bottom, 30)
+                        .padding(.bottom, 30)
+                    EarthquakesTextField(typeTextField: passwordType, text: $userPassword, showTextValidation: $showPasswordValidation)
+                        .onChange(of: userPassword, perform: { newValue in
+                            let savePassword = UserDefaults.standard.string(forKey: "password")
+                            showPasswordValidation = newValue != savePassword
+                        })
+                        .padding(.bottom, 30)
                     Button("Iniciar sesión") {
-                        let saveEmail = UserDefaults.standard.string(forKey: "email")
+                        /*let saveEmail = UserDefaults.standard.string(forKey: "email")
                         let savePassword = UserDefaults.standard.string(forKey: "password")
-                        if userEmail == saveEmail && userPassword == savePassword {
-                            UserDefaults.standard.set(true, forKey: "isLoggedIn")
+                        userEmail == saveEmail && userPassword == savePassword*/
+                        if SessionManager.shared.isValidCredentials(email: userEmail, password: userPassword) {
+                            //UserDefaults.standard.set(true, forKey: "isLoggedIn")
+                            SessionManager.shared.login()
                             delegate?.didTapLogin()
                         } else {
                             showFailureAlert = true
@@ -114,11 +86,6 @@ struct LoginView: View {
         }
     }
 }
-
-/*EarthquakesTextField(typeTextField: .email)
-    .padding(.bottom, 20)
-EarthquakesTextField(typeTextField: .password)
-    .padding(.bottom, 30)*/
 
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {

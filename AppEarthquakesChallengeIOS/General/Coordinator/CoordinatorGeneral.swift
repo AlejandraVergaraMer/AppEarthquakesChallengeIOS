@@ -30,7 +30,7 @@ class CoordinatorGeneral: Coordinator {
     }
     
     func start() {
-        UserDefaults.standard.set(false, forKey: "isLoggedIn")
+        //UserDefaults.standard.set(false, forKey: "isLoggedIn")
         if !isLoggedIn {
             let loginView = LoginView(delegate: self)
             let controller = UIHostingController(rootView: loginView)
@@ -39,7 +39,7 @@ class CoordinatorGeneral: Coordinator {
         } else {
             let serviceHome = EarthquakeListService()
             let providerHome = EarthquakeListProvider(serviceApi: serviceHome)
-            let controller = EarthquakeListViewController(provider: providerHome, delegate: self)
+            let controller = EarthquakeListViewController(provider: providerHome, delegate: self, isFirtsLogin: false)
             navigationController?.isNavigationBarHidden = false
             navigationController?.pushViewController(controller, animated: true)
         }
@@ -51,7 +51,7 @@ extension CoordinatorGeneral: LoginViewDelegate {
         debugPrint("Fue a pantalla Home")
         let serviceHome = EarthquakeListService()
         let providerHome = EarthquakeListProvider(serviceApi: serviceHome)
-        let controller = EarthquakeListViewController(provider: providerHome, delegate: self)
+        let controller = EarthquakeListViewController(provider: providerHome, delegate: self, isFirtsLogin: true)
         navigationController?.isNavigationBarHidden = false
         navigationController?.pushViewController(controller, animated: true)
     }
@@ -82,9 +82,18 @@ extension CoordinatorGeneral: LoginViewDelegate {
 }
 
 extension CoordinatorGeneral: EarthquakeViewControllerDelegate {
-    func closeSession() {
-        UserDefaults.standard.set(false, forKey: "isLoggedIn")
-        navigationController?.popViewController(animated: true)
+    func closeSession(isFirtsLogin: Bool) {
+        SessionManager.shared.logout()
+        //navigationController?.popViewController(animated: true)
+        if isFirtsLogin {
+            navigationController?.setNavigationBarHidden(true, animated: false)
+            navigationController?.popViewController(animated: true)
+        } else {
+            let loginView = LoginView(delegate: self)
+            let loginController = UIHostingController(rootView: loginView)
+            navigationController?.setNavigationBarHidden(true, animated: false)
+            navigationController?.pushViewController(loginController, animated: true)
+        }
         /*if isLoggedIn ?? nil {
             let loginView = LoginView(delegate: self)
             let loginController = UIHostingController(rootView: loginView)

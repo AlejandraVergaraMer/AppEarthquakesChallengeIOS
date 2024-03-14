@@ -17,21 +17,35 @@ class EarthquakeDatePickerView: UIView {
     
     weak var delegate: DatePickerViewDelegate?
     
+    private let datePickersContetView: UIStackView = {
+        let view = UIStackView(frame: .zero)
+        view.axis = .horizontal
+        view.spacing = 4.0
+        view.distribution = .fillProportionally
+        view.alignment = .fill
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     private let startDatePicker: UIDatePicker = {
         let picker = UIDatePicker()
         picker.datePickerMode = .date
-        picker.addTarget(picker, action: #selector(startDatePickerValueChanged), for: .valueChanged)
+        picker.addTarget(self, action: #selector(startDatePickerValueChanged), for: .valueChanged)
         picker.date = DateManager.getPreviousDate()
         picker.translatesAutoresizingMaskIntoConstraints = false
+        picker.widthAnchor.constraint(equalToConstant: 128.0).isActive = true
+        picker.heightAnchor.constraint(equalToConstant: 26.0).isActive = true
         return picker
     }()
     
     private let endDatePicker: UIDatePicker = {
         let picker = UIDatePicker()
         picker.datePickerMode = .date
-        picker.addTarget(picker, action: #selector(endDatePickerValueChanged), for: .valueChanged)
+        picker.addTarget(self, action: #selector(endDatePickerValueChanged), for: .valueChanged)
         picker.date = DateManager.getCurrentDate()
         picker.translatesAutoresizingMaskIntoConstraints = false
+        picker.widthAnchor.constraint(equalToConstant: 128.0).isActive = true
+        picker.heightAnchor.constraint(equalToConstant: 26.0).isActive = true
         return picker
     }()
     
@@ -41,22 +55,19 @@ class EarthquakeDatePickerView: UIView {
         configuracion.baseForegroundColor = .black
         configuracion.baseBackgroundColor = .systemGray2
         configuracion.title = "Buscar"
-        configuracion.image = UIImage(systemName: "magnifyingglass")
-        //button.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
+        let originalImage = UIImage(systemName: "magnifyingglass")
+        let newSize = CGSize(width: 16, height: 16)
+        UIGraphicsBeginImageContextWithOptions(newSize, false, 0.0)
+        originalImage?.draw(in: CGRect(origin: .zero, size: newSize))
+        let resizedImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        configuracion.image = resizedImage
         button.addTarget(self, action: #selector(searchEarthquake), for: .touchUpInside)
         button.configuration = configuracion
-        //button.isEnabled = false
         button.translatesAutoresizingMaskIntoConstraints = false
-                
+        button.widthAnchor.constraint(equalToConstant: 98.0).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 26.0).isActive = true
         return button
-    }()
-    
-    private let datePickersContetView: UIStackView = {
-        let view = UIStackView(frame: .zero)
-        view.axis = .horizontal
-        view.spacing = 10.0
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
     }()
     
     var startTime = ""
@@ -99,27 +110,48 @@ class EarthquakeDatePickerView: UIView {
 extension EarthquakeDatePickerView {
     
     private func setupView(){
+        
+        datePickersContetView.addArrangedSubview(startDatePicker)
+        datePickersContetView.addArrangedSubview(endDatePicker)
+        datePickersContetView.addArrangedSubview(searchButton)
+        
         self.addSubview(datePickersContetView)
-        datePickersContetView.addSubview(startDatePicker)
-        datePickersContetView.addSubview(endDatePicker)
-        datePickersContetView.addSubview(searchButton)
         
         NSLayoutConstraint.activate([
             
-            .init(item: datePickersContetView, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 10.0),
-            .init(item: datePickersContetView, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 20.0),
-            .init(item: datePickersContetView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: -20),
-            .init(item: datePickersContetView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 50),
-            .init(item: datePickersContetView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: -10.0),
-            .init(item: self, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 50.0)
+            .init(item: datePickersContetView, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 0.0),
+            .init(item: datePickersContetView, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 0.0),
+            .init(item: datePickersContetView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 0.0),
+            //.init(item: datePickersContetView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 50.0),
+            .init(item: datePickersContetView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 0.0),
+            .init(item: self, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 26.0)
         ])
-        
-        NSLayoutConstraint.activate([
-            .init(item: searchButton, attribute: .leading, relatedBy: .equal, toItem: endDatePicker, attribute: .trailing, multiplier: 1.0, constant: 10.0),
+        /*NSLayoutConstraint.activate([
+            startDatePicker.widthAnchor.constraint(equalToConstant: 140),
+            endDatePicker.widthAnchor.constraint(equalToConstant: 140),
+            searchButton.widthAnchor.constraint(equalToConstant: 110)
+        ])*/
+        /*NSLayoutConstraint.activate([
+            .init(item: startDatePicker, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 130.0),
+            
+            //.init(item: endDatePicker, attribute: .leading, relatedBy: .equal, toItem: startDatePicker, attribute: .trailing, multiplier: 1.0, constant: 10.0),
+            .init(item: endDatePicker, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 130.0),
+            
+            //.init(item: searchButton, attribute: .leading, relatedBy: .equal, toItem: endDatePicker, attribute: .trailing, multiplier: 1.0, constant: 10.0),
             .init(item: searchButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 30.0),
+            .init(item: searchButton, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 110.0),
             .init(item: searchButton, attribute: .centerY, relatedBy: .equal, toItem: datePickersContetView, attribute: .centerY, multiplier: 1.0, constant: 0.0),
             .init(item: searchButton, attribute: .trailing, relatedBy: .equal, toItem: datePickersContetView, attribute: .trailing, multiplier: 1.0, constant: 0.0)
-        ])
+        ])*/
+        /*.init(item: startDatePicker, attribute: .leading, relatedBy: .equal, toItem: datePickersContetView, attribute: .leading, multiplier: 1.0, constant: 0.0),
+        .init(item: startDatePicker, attribute: .top, relatedBy: .equal, toItem: datePickersContetView, attribute: .top, multiplier: 1.0, constant: 0.0),
+        .init(item: startDatePicker, attribute: .bottom, relatedBy: .equal, toItem: datePickersContetView, attribute: .bottom, multiplier: 1.0, constant: 0.0),*/
+        //.init(item: startDatePicker, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 130.0),
+        
+        /*.init(item: endDatePicker, attribute: .leading, relatedBy: .equal, toItem: startDatePicker, attribute: .trailing, multiplier: 1.0, constant: 10.0),
+        .init(item: endDatePicker, attribute: .top, relatedBy: .equal, toItem: datePickersContetView, attribute: .top, multiplier: 1.0, constant: 0.0),
+        .init(item: endDatePicker, attribute: .bottom, relatedBy: .equal, toItem: datePickersContetView, attribute: .bottom, multiplier: 1.0, constant: 0.0),*/
+        //.init(item: endDatePicker, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 130.0),
     }
 }
 

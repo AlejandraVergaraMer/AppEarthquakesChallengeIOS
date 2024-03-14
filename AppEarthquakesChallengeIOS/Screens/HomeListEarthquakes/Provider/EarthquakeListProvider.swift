@@ -11,7 +11,6 @@ import Combine
 protocol EarthquakeListProviderProtocol {
     func getNextIndices()
     func getUpdatedList() -> [EarthquakeModelCell]
-    func getEarthquakeCombine() async throws -> (StatusCaseEnum, [EarthquakeModelCell]?)
     func getEarthquakeListCombine(startTime: String, endTime: String) async throws -> (StatusCaseEnum, [EarthquakeModelCell]?)
 }
 
@@ -35,32 +34,6 @@ class EarthquakeListProvider: EarthquakeListProviderProtocol {
         }
         do {
             let (status, data) = try await serviceApi.getEarthquakesCombine(startTime: startTime, endTime: endTime)
-            guard status == .success, let listEarthquake = data?.earthquakes else {
-                throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "No data available"])
-            }
-            let earthquakeArray = listEarthquake.map({ earthquake -> EarthquakeModelCell in
-                let objet = EarthquakeModelCell(
-                    title: earthquake.properties.title,
-                    place: earthquake.properties.place,
-                    magnitude: earthquake.properties.mag,
-                    depth: earthquake.geometry.coordinates[2],
-                    id: earthquake.id)
-                return objet
-            })
-            self.listOriginal = earthquakeArray
-            self.getNextIndices()
-            return (StatusCaseEnum.success, self.listToShow)
-        } catch {
-            throw error
-        }
-    }
-    
-    func getEarthquakeCombine() async throws -> (StatusCaseEnum, [EarthquakeModelCell]?) {
-        guard let serviceApi = serviceApi else {
-                throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "Service API is not available"])
-        }
-        do {
-            let (status, data) = try await serviceApi.getEarthquakeListCombine()
             guard status == .success, let listEarthquake = data?.earthquakes else {
                 throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "No data available"])
             }

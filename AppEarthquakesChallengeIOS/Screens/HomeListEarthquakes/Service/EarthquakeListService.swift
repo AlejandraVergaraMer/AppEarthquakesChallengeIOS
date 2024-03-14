@@ -10,7 +10,6 @@ import Combine
 
 protocol EarthquakeListServiceProtocol {
     func getEarthquakeList(completion : @escaping(_ status: StatusCaseEnum, _ data: EarthquakeResponseDataModel?, _ error: Error?) -> Void)
-    func getEarthquakeListCombine() async throws -> (StatusCaseEnum, EarthquakeResponseDataModel?)
     func getEarthquakesCombine(startTime: String, endTime: String) async throws -> (StatusCaseEnum, EarthquakeResponseDataModel?)
 }
 
@@ -44,26 +43,8 @@ class EarthquakeListService: EarthquakeListServiceProtocol {
         }
     }
     
-    func getEarthquakeListCombine() async throws -> (StatusCaseEnum, EarthquakeResponseDataModel?) {
-        
-        let endpoint = EventsEndpoints.getEarthquakeMockTwo
-        let request = RequestModel()
-        guard let urlRequest =  request.getUrlRequest(endPoints: endpoint) else {
-            throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "Invalid URLRequest"])
-        }
-        let (data, _) = try await URLSession.shared.data(for: urlRequest)
-        let decoder = JSONDecoder()
-        do {
-            let dataDecoder = try decoder.decode(EarthquakeResponseDataModel.self, from: data)
-            return (.success, dataDecoder)
-        } catch {
-            print("error al decodificar: \(error.localizedDescription)")
-            throw error
-        }
-    }
-    
     func getEarthquakesCombine(startTime: String, endTime: String) async throws -> (StatusCaseEnum, EarthquakeResponseDataModel?) {
-        let endpoint = EventsEndpoints.getEarthquakesMock(startTime: startTime, endTime: endTime)
+        let endpoint = EventsEndpoints.getEarthquakesParameterMock(startTime: startTime, endTime: endTime)
         let request = RequestModel()
         guard let urlRequest =  request.getUrlRequest(endPoints: endpoint) else {
             throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "Invalid URLRequest"])

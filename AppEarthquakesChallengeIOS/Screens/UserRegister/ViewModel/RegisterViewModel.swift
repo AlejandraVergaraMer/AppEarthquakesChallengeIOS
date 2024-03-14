@@ -22,13 +22,6 @@ class RegisterViewModel: ObservableObject {
         self.failureAlert = failureAlert
     }
     
-    func saveUserData(firtsName: String, lastName: String, email: String, password: String) {
-        UserDefaults.standard.set(firtsName, forKey: "firtsName")
-        UserDefaults.standard.set(lastName, forKey: "lastName")
-        UserDefaults.standard.set(email, forKey: "email")
-        UserDefaults.standard.set(password, forKey: "password")
-    }
-    
     func isValidTextField(_ value: String, type: TypeTextField) -> Bool {
         var regularExpression = ""
         switch type {

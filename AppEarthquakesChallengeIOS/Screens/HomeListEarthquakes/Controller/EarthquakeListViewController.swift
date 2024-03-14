@@ -11,7 +11,7 @@ import Combine
 
 protocol EarthquakeViewControllerDelegate: AnyObject {
     func didTapDetails(idCell: String)
-    func closeSession()
+    func closeSession(isFirtsLogin: Bool)
 }
 
 class EarthquakeListViewController: UIViewController {
@@ -20,7 +20,7 @@ class EarthquakeListViewController: UIViewController {
     private var pagerIndex: Int = 0
     private var listData: [EarthquakeModelCell] = []
     weak var delegate: EarthquakeViewControllerDelegate?
-    
+    private let isFirtsLogin: Bool
     
     private lazy var datePicker: EarthquakeDatePickerView = {
         let picker = EarthquakeDatePickerView(delegate: self)
@@ -45,9 +45,10 @@ class EarthquakeListViewController: UIViewController {
         return imageView
     }()
     
-    init(provider: EarthquakeListProviderProtocol, delegate: EarthquakeViewControllerDelegate) {
+    init(provider: EarthquakeListProviderProtocol, delegate: EarthquakeViewControllerDelegate, isFirtsLogin: Bool) {
         self.provider = provider
         self.delegate = delegate
+        self.isFirtsLogin = isFirtsLogin
         super.init(nibName: nil, bundle: nil)
         
     }
@@ -113,7 +114,7 @@ class EarthquakeListViewController: UIViewController {
     
     @objc
     private func closeSession(){
-        delegate?.closeSession()
+        delegate?.closeSession(isFirtsLogin: isFirtsLogin)
     }
 }
 
@@ -132,12 +133,12 @@ extension EarthquakeListViewController {
             .init(item: gradientView, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: 0.0),
             
             .init(item: datePicker, attribute: .top, relatedBy: .equal, toItem: gradientView.safeAreaLayoutGuide, attribute: .top, multiplier: 1.0, constant: 0.0),
-            .init(item: datePicker, attribute: .leading, relatedBy: .equal, toItem: gradientView, attribute: .leading, multiplier: 1.0, constant: 0.0),
-            .init(item: datePicker, attribute: .trailing, relatedBy: .equal, toItem: gradientView, attribute: .trailing, multiplier: 1.0, constant: 0.0),
+            .init(item: datePicker, attribute: .leading, relatedBy: .equal, toItem: gradientView, attribute: .leading, multiplier: 1.0, constant: 14.0),
+            .init(item: datePicker, attribute: .trailing, relatedBy: .equal, toItem: gradientView, attribute: .trailing, multiplier: 1.0, constant: -14.0),
                 
             .init(item: tableView, attribute: .top, relatedBy: .equal, toItem: datePicker, attribute: .bottom, multiplier: 1.0, constant: 10.0),
-            .init(item: tableView, attribute: .leading, relatedBy: .equal, toItem: gradientView, attribute: .leading, multiplier: 1.0, constant: 20.0),
-            .init(item: tableView, attribute: .trailing, relatedBy: .equal, toItem: gradientView, attribute: .trailing, multiplier: 1.0, constant: -20.0),
+            .init(item: tableView, attribute: .leading, relatedBy: .equal, toItem: gradientView, attribute: .leading, multiplier: 1.0, constant: 14.0),
+            .init(item: tableView, attribute: .trailing, relatedBy: .equal, toItem: gradientView, attribute: .trailing, multiplier: 1.0, constant: -14.0),
             .init(item: tableView, attribute: .bottom, relatedBy: .equal, toItem: gradientView, attribute: .bottom, multiplier: 1.0, constant: -30.0)
             
         ])
