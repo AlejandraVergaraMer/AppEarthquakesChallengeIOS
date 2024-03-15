@@ -107,7 +107,7 @@ extension CoordinatorGeneral: EarthquakeViewControllerDelegate {
     
     func didTapDetails(idCell: String) {
         let service = DetailEarthquakeService(idEarthquake: idCell)
-        let provider = DetailEarthquakeProvider(serviceApi: service)
+        let provider = DetailEarthquakeProvider(serviceApi: service, idEarthquake: idCell)
         let viewModel = EarthquakeDetailViewModel(provider: provider)
         let controller = UIHostingController(rootView: DetailEarthquakeView(viewModel: viewModel))
         controller.navigationItem.backButtonDisplayMode = .minimal

@@ -7,10 +7,15 @@
 import MapKit
 import SwiftUI
 
-struct CoordinatesRegion: Identifiable {
+class CoordinatesRegion: ObservableObject, Identifiable {
     let id = UUID()
-    let latitude: Double // = 9.9333
-    let longitude: Double // = -84.0833
+    @Published var latitude: Double // = 9.9333
+    @Published var longitude: Double // = -84.0833
+    
+    init(latitude: Double, longitude: Double) {
+        self.latitude = latitude
+        self.longitude = longitude
+    }
 }
 
 struct Span {
@@ -18,9 +23,8 @@ struct Span {
 }
 
 struct MapEarthquakeView: View {
-    var coordinateRegion: CoordinatesRegion
+    @ObservedObject var coordinateRegion: CoordinatesRegion
     var span: Span
-    
     @State private var region: MKCoordinateRegion = MKCoordinateRegion()
     
     init(coordinateRegion: CoordinatesRegion, span: Span) {
@@ -34,6 +38,12 @@ struct MapEarthquakeView: View {
                 MapMarker(coordinate: CLLocationCoordinate2D(latitude: place.latitude, longitude: place.longitude))
             }
             .onAppear {
+                setRegion()
+            }
+            .onChange(of: coordinateRegion.latitude) { _ in
+                setRegion()
+            }
+            .onChange(of: coordinateRegion.longitude) { _ in
                 setRegion()
             }
         }
@@ -50,6 +60,6 @@ struct MapEarthquakeView: View {
 
 struct MapEarthquakeView_Previews: PreviewProvider {
     static var previews: some View {
-        MapEarthquakeView(coordinateRegion: .init(latitude: 9.9333, longitude: -84.0833), span: .init())
+        MapEarthquakeView(coordinateRegion: .init(latitude: 37.8455, longitude: -121.7943333), span: .init())
     }
 }

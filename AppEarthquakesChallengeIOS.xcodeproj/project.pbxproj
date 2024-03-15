@@ -10,6 +10,10 @@
 		A78028352B8F812F00174609 /* DateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A78028342B8F812F00174609 /* DateManager.swift */; };
 		A780283A2B8FA57000174609 /* EndPoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = A78028392B8FA57000174609 /* EndPoints.swift */; };
 		A780283C2B8FA93F00174609 /* RequestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A780283B2B8FA93F00174609 /* RequestModel.swift */; };
+		A7BF0FF52BA3E30B00DAD42E /* LoadingViewSwiftUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7BF0FF42BA3E30B00DAD42E /* LoadingViewSwiftUI.swift */; };
+		A7BF0FF72BA3E71800DAD42E /* LoadingViewUIKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7BF0FF62BA3E71800DAD42E /* LoadingViewUIKit.swift */; };
+		A7BF0FF92BA3E79100DAD42E /* ErrorViewUIKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7BF0FF82BA3E79100DAD42E /* ErrorViewUIKit.swift */; };
+		A7BF0FFB2BA3E7A300DAD42E /* ErrorViewSwiftUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7BF0FFA2BA3E7A300DAD42E /* ErrorViewSwiftUI.swift */; };
 		A7CB34DB2BA13BD800B074E3 /* HTTPMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7CB34DA2BA13BD800B074E3 /* HTTPMethod.swift */; };
 		A7CB34DD2BA13C1B00B074E3 /* EventsEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7CB34DC2BA13C1B00B074E3 /* EventsEndpoints.swift */; };
 		A7CB34E02BA29FEF00B074E3 /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7CB34DF2BA29FEF00B074E3 /* SessionManager.swift */; };
@@ -48,6 +52,10 @@
 		A78028342B8F812F00174609 /* DateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateManager.swift; sourceTree = "<group>"; };
 		A78028392B8FA57000174609 /* EndPoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndPoints.swift; sourceTree = "<group>"; };
 		A780283B2B8FA93F00174609 /* RequestModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestModel.swift; sourceTree = "<group>"; };
+		A7BF0FF42BA3E30B00DAD42E /* LoadingViewSwiftUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewSwiftUI.swift; sourceTree = "<group>"; };
+		A7BF0FF62BA3E71800DAD42E /* LoadingViewUIKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingViewUIKit.swift; sourceTree = "<group>"; };
+		A7BF0FF82BA3E79100DAD42E /* ErrorViewUIKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorViewUIKit.swift; sourceTree = "<group>"; };
+		A7BF0FFA2BA3E7A300DAD42E /* ErrorViewSwiftUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorViewSwiftUI.swift; sourceTree = "<group>"; };
 		A7CB34DA2BA13BD800B074E3 /* HTTPMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPMethod.swift; sourceTree = "<group>"; };
 		A7CB34DC2BA13C1B00B074E3 /* EventsEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsEndpoints.swift; sourceTree = "<group>"; };
 		A7CB34DF2BA29FEF00B074E3 /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
@@ -206,6 +214,10 @@
 			children = (
 				A7E42DE82B7DC6DC00666387 /* EarthquakesTextField.swift */,
 				A7E42DEA2B7DC71200666387 /* EarthquakeLabelView.swift */,
+				A7BF0FF42BA3E30B00DAD42E /* LoadingViewSwiftUI.swift */,
+				A7BF0FF62BA3E71800DAD42E /* LoadingViewUIKit.swift */,
+				A7BF0FF82BA3E79100DAD42E /* ErrorViewUIKit.swift */,
+				A7BF0FFA2BA3E7A300DAD42E /* ErrorViewSwiftUI.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -453,17 +465,21 @@
 				A7E42E212B84F14F00666387 /* DetailEarthquakeProvider.swift in Sources */,
 				A7E42E232B84F44800666387 /* EarthquakeModelForDetail.swift in Sources */,
 				A7E42DFB2B7DC8AE00666387 /* MapEarthquakeView.swift in Sources */,
+				A7BF0FFB2BA3E7A300DAD42E /* ErrorViewSwiftUI.swift in Sources */,
 				A7E42E052B7DC9D800666387 /* EarthquakeViewCell.swift in Sources */,
 				A7E42DCA2B7DC4BD00666387 /* AppDelegate.swift in Sources */,
 				A7E42DFD2B7DC90500666387 /* DetailEarthquakeView.swift in Sources */,
 				A7E42E092B7DCF2500666387 /* EarthquakePagerView.swift in Sources */,
 				A7E42E172B7DD12000666387 /* EarthquakeTableViewDataSource.swift in Sources */,
+				A7BF0FF72BA3E71800DAD42E /* LoadingViewUIKit.swift in Sources */,
 				A7E42E1D2B84EC5E00666387 /* EarthquakeDetailModel.swift in Sources */,
 				A780283A2B8FA57000174609 /* EndPoints.swift in Sources */,
 				A7CB34DB2BA13BD800B074E3 /* HTTPMethod.swift in Sources */,
+				A7BF0FF52BA3E30B00DAD42E /* LoadingViewSwiftUI.swift in Sources */,
 				A7E42DCC2B7DC4BD00666387 /* SceneDelegate.swift in Sources */,
 				A7E42E0B2B7DCF6400666387 /* EarthquakeDatePickerView.swift in Sources */,
 				A7E42DE92B7DC6DC00666387 /* EarthquakesTextField.swift in Sources */,
+				A7BF0FF92BA3E79100DAD42E /* ErrorViewUIKit.swift in Sources */,
 				A78028352B8F812F00174609 /* DateManager.swift in Sources */,
 				A7CB34DD2BA13C1B00B074E3 /* EventsEndpoints.swift in Sources */,
 				A7E42DEB2B7DC71200666387 /* EarthquakeLabelView.swift in Sources */,
