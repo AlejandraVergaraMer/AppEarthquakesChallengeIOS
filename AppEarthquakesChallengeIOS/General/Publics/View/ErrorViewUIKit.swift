@@ -48,7 +48,6 @@ class ErrorViewUIKit: UIView {
         configuracion.baseBackgroundColor = .white
         configuracion.cornerStyle = .medium
         configuracion.buttonSize = .large
-        //configuracion.t = UIFont.boldSystemFont(ofSize: 20)
                         
         button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
         button.configuration = configuracion
@@ -72,16 +71,3 @@ class ErrorViewUIKit: UIView {
         viewModel.action()
     }
 }
-/*
- init(image: UIImage, title: String, description: String, action: @escaping () -> Void) {
-     super.init(frame: .zero)
-
-     imageView.image = image
-     titleLabel.text = title
-     descriptionLabel.text = description
-     button.setTitle("Intentar de nuevo", for: .normal)
-     button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
-
-     // Aquí agregarías el código para configurar y agregar las vistas a tu jerarquía de vistas y establecer las restricciones de Auto Layout.
- }
- */

@@ -146,7 +146,6 @@ extension EarthquakeListViewController {
 }
 extension EarthquakeListViewController: DatePickerViewDelegate {
     func didTapSearch(startTime: String, endTime: String) {
-        //BUSCAR POR FECHA
         Task {
             await fetchData(startTime: startTime, endTime: endTime)
         }

@@ -50,11 +50,7 @@ struct LoginView: View {
                         })
                         .padding(.bottom, 30)
                     Button("Iniciar sesión") {
-                        /*let saveEmail = UserDefaults.standard.string(forKey: "email")
-                        let savePassword = UserDefaults.standard.string(forKey: "password")
-                        userEmail == saveEmail && userPassword == savePassword*/
                         if SessionManager.shared.isValidCredentials(email: userEmail, password: userPassword) {
-                            //UserDefaults.standard.set(true, forKey: "isLoggedIn")
                             SessionManager.shared.login()
                             delegate?.didTapLogin()
                         } else {

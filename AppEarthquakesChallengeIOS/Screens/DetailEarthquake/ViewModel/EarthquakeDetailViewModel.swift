@@ -17,8 +17,6 @@ class EarthquakeDetailViewModel: ObservableObject {
     init(data: EarthquakeModelForDetail? = nil, provider: DetailEarthquakeProvider? = nil) {
         self.data = data
         self.provider = provider
-        
-        //fetchDataCompletion()
         Task {
             await fetchDataCombine()
         }
@@ -39,44 +37,3 @@ class EarthquakeDetailViewModel: ObservableObject {
         }
     }
 }
-/*func fetchDataCompletion() {
-    provider?.getDetailFromList(completion: { status, data, error in
-        DispatchQueue.main.async {
-            if let data = data {
-                self.status = .success
-                self.data = data
-            } else {
-                self.status = .failure
-            }
-        }
-    })
-}*/
-/*var title: String {
-    guard let title = data?.title else { return ""}
-    return title
-}
-
-var latitude: Double {
-    guard let latitude = data?.latitude else { return 0.000}
-    return latitude
-}
-
-var longitude: Double {
-    guard let longitude = data?.longitude else { return 0.000}
-    return longitude
-}
-
-var magnitude: Double {
-    guard let magnitude = data?.magnitude else { return 0.000}
-    return magnitude
-}
-
-var depth: Double {
-    guard let depth = data?.depth else { return 0.000}
-    return depth
-}
-
-var place: String {
-    guard let place = data?.place else { return ""}
-    return place
-}*/

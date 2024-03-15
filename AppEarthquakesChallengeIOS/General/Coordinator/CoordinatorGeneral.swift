@@ -84,7 +84,6 @@ extension CoordinatorGeneral: LoginViewDelegate {
 extension CoordinatorGeneral: EarthquakeViewControllerDelegate {
     func closeSession(isFirtsLogin: Bool) {
         SessionManager.shared.logout()
-        //navigationController?.popViewController(animated: true)
         if isFirtsLogin {
             navigationController?.setNavigationBarHidden(true, animated: false)
             navigationController?.popViewController(animated: true)
@@ -94,15 +93,6 @@ extension CoordinatorGeneral: EarthquakeViewControllerDelegate {
             navigationController?.setNavigationBarHidden(true, animated: false)
             navigationController?.pushViewController(loginController, animated: true)
         }
-        /*if isLoggedIn ?? nil {
-            let loginView = LoginView(delegate: self)
-            let loginController = UIHostingController(rootView: loginView)
-            navigationController?.setNavigationBarHidden(true, animated: false)
-            navigationController?.pushViewController(loginController, animated: true)
-        } else {
-            navigationController?.setNavigationBarHidden(true, animated: false)
-            navigationController?.popViewController(animated: true)
-        }*/
     }
     
     func didTapDetails(idCell: String) {

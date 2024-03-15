@@ -24,7 +24,6 @@ struct LoadingViewSwiftUI: View {
                 .frame(width: 100, height: 100)
                 .rotationEffect(Angle(degrees: isLoading ? 360 : 0))
                 .animation(isLoading ? Animation.linear(duration: 1).repeatForever(autoreverses: false) : .default, value: isLoading)
-            //.animation(Animation.linear(duration: 1).repeatForever(autoreverses: false))
             Spacer()
         }
     }

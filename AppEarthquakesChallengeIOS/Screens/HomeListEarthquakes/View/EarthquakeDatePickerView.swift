@@ -9,7 +9,6 @@ import Foundation
 import UIKit
 
 protocol DatePickerViewDelegate: AnyObject {
-    //func datePickerValueChanged()
     func didTapSearch(startTime: String, endTime: String)
 }
 
@@ -122,36 +121,9 @@ extension EarthquakeDatePickerView {
             .init(item: datePickersContetView, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 0.0),
             .init(item: datePickersContetView, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 0.0),
             .init(item: datePickersContetView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 0.0),
-            //.init(item: datePickersContetView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 50.0),
             .init(item: datePickersContetView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 0.0),
             .init(item: self, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 26.0)
         ])
-        /*NSLayoutConstraint.activate([
-            startDatePicker.widthAnchor.constraint(equalToConstant: 140),
-            endDatePicker.widthAnchor.constraint(equalToConstant: 140),
-            searchButton.widthAnchor.constraint(equalToConstant: 110)
-        ])*/
-        /*NSLayoutConstraint.activate([
-            .init(item: startDatePicker, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 130.0),
-            
-            //.init(item: endDatePicker, attribute: .leading, relatedBy: .equal, toItem: startDatePicker, attribute: .trailing, multiplier: 1.0, constant: 10.0),
-            .init(item: endDatePicker, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 130.0),
-            
-            //.init(item: searchButton, attribute: .leading, relatedBy: .equal, toItem: endDatePicker, attribute: .trailing, multiplier: 1.0, constant: 10.0),
-            .init(item: searchButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 30.0),
-            .init(item: searchButton, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 110.0),
-            .init(item: searchButton, attribute: .centerY, relatedBy: .equal, toItem: datePickersContetView, attribute: .centerY, multiplier: 1.0, constant: 0.0),
-            .init(item: searchButton, attribute: .trailing, relatedBy: .equal, toItem: datePickersContetView, attribute: .trailing, multiplier: 1.0, constant: 0.0)
-        ])*/
-        /*.init(item: startDatePicker, attribute: .leading, relatedBy: .equal, toItem: datePickersContetView, attribute: .leading, multiplier: 1.0, constant: 0.0),
-        .init(item: startDatePicker, attribute: .top, relatedBy: .equal, toItem: datePickersContetView, attribute: .top, multiplier: 1.0, constant: 0.0),
-        .init(item: startDatePicker, attribute: .bottom, relatedBy: .equal, toItem: datePickersContetView, attribute: .bottom, multiplier: 1.0, constant: 0.0),*/
-        //.init(item: startDatePicker, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 130.0),
-        
-        /*.init(item: endDatePicker, attribute: .leading, relatedBy: .equal, toItem: startDatePicker, attribute: .trailing, multiplier: 1.0, constant: 10.0),
-        .init(item: endDatePicker, attribute: .top, relatedBy: .equal, toItem: datePickersContetView, attribute: .top, multiplier: 1.0, constant: 0.0),
-        .init(item: endDatePicker, attribute: .bottom, relatedBy: .equal, toItem: datePickersContetView, attribute: .bottom, multiplier: 1.0, constant: 0.0),*/
-        //.init(item: endDatePicker, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 130.0),
     }
 }
 

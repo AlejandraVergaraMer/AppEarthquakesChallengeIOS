@@ -58,7 +58,6 @@ class EarthquakeListProvider: EarthquakeListProviderProtocol {
         let starIndex = index * 10
         let endIndex = starIndex + 9
         let nextList = Array(listOriginal[starIndex...endIndex])
-        //self.listToShow.append(contentsOf: nextList)
         self.listToShow = nextList
         self.index += 1
     }
