@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A72F35D22BAA246900D8C769 /* earthquakes.json in Resources */ = {isa = PBXBuildFile; fileRef = A72F35D12BAA246900D8C769 /* earthquakes.json */; };
+		A72F35D42BAA247500D8C769 /* earthquakesDetail.json in Resources */ = {isa = PBXBuildFile; fileRef = A72F35D32BAA247500D8C769 /* earthquakesDetail.json */; };
+		A72F35D62BAA247B00D8C769 /* earthquakesParameters.json in Resources */ = {isa = PBXBuildFile; fileRef = A72F35D52BAA247B00D8C769 /* earthquakesParameters.json */; };
 		A78028352B8F812F00174609 /* DateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A78028342B8F812F00174609 /* DateManager.swift */; };
 		A780283A2B8FA57000174609 /* EndPoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = A78028392B8FA57000174609 /* EndPoints.swift */; };
 		A780283C2B8FA93F00174609 /* RequestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A780283B2B8FA93F00174609 /* RequestModel.swift */; };
@@ -49,6 +52,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A72F35D12BAA246900D8C769 /* earthquakes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = earthquakes.json; path = ../../../../earthquakes.json; sourceTree = "<group>"; };
+		A72F35D32BAA247500D8C769 /* earthquakesDetail.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = earthquakesDetail.json; path = ../../../../earthquakesDetail.json; sourceTree = "<group>"; };
+		A72F35D52BAA247B00D8C769 /* earthquakesParameters.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = earthquakesParameters.json; path = ../../../../earthquakesParameters.json; sourceTree = "<group>"; };
 		A78028342B8F812F00174609 /* DateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateManager.swift; sourceTree = "<group>"; };
 		A78028392B8FA57000174609 /* EndPoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndPoints.swift; sourceTree = "<group>"; };
 		A780283B2B8FA93F00174609 /* RequestModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestModel.swift; sourceTree = "<group>"; };
@@ -160,6 +166,7 @@
 		A7E42DC82B7DC4BD00666387 /* AppEarthquakesChallengeIOS */ = {
 			isa = PBXGroup;
 			children = (
+				A7E6A4602BAA21C300EA7478 /* ServiceJSON */,
 				A7E42DDE2B7DC58E00666387 /* Screens */,
 				A7E42DDD2B7DC58100666387 /* General */,
 				A7E42DC92B7DC4BD00666387 /* AppDelegate.swift */,
@@ -382,6 +389,16 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
+		A7E6A4602BAA21C300EA7478 /* ServiceJSON */ = {
+			isa = PBXGroup;
+			children = (
+				A72F35D52BAA247B00D8C769 /* earthquakesParameters.json */,
+				A72F35D32BAA247500D8C769 /* earthquakesDetail.json */,
+				A72F35D12BAA246900D8C769 /* earthquakes.json */,
+			);
+			path = ServiceJSON;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -440,8 +457,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A72F35D22BAA246900D8C769 /* earthquakes.json in Resources */,
 				A7E42DD62B7DC4BF00666387 /* LaunchScreen.storyboard in Resources */,
+				A72F35D62BAA247B00D8C769 /* earthquakesParameters.json in Resources */,
 				A7E42DD32B7DC4BF00666387 /* Assets.xcassets in Resources */,
+				A72F35D42BAA247500D8C769 /* earthquakesDetail.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
